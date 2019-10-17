@@ -10,7 +10,7 @@ permalink: /guides/pipelines-getting-started/
 
 == Working with Kabanero Pipelines
 
-Kabanero uses link:https://github.com/tektoncd/pipeline/tree/master/docs#usage[Tekton Pipelines] to illustrate a CI/CD workflow. Each of the featured link:https://github.com/kabanero-io/collections[Kabanero collections] contains a default pipeline that builds the collection, publishes the image to a docker repo, and then deploys the image to the Kubernetes cluster. You can add more tasks and pipelines to the collections. All the tasks and pipelines are activated by the link:https://github.com/kabanero-io/kabanero-operator[Kabanero operator].
+Kabanero uses link:https://github.com/tektoncd/pipeline/tree/master/docs#usage[Tekton Pipelines] to illustrate a continuous input and continuous delivery (CI/DI) workflow. Each of the featured link:https://github.com/kabanero-io/collections[Kabanero collections] contains a default pipeline that builds the collection, publishes the image to a docker repo, and then deploys the image to the Kubernetes cluster. You can add more tasks and pipelines to the collections. All the tasks and pipelines are activated by the link:https://github.com/kabanero-io/kabanero-operator[Kabanero operator].
 
 To learn more about Tekton Pipelines and creating new tasks, see link:https://github.com/tektoncd/pipeline/blob/master/docs/tutorial.md[the Tekton Pipeline tutorial].
 
