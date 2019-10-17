@@ -138,9 +138,9 @@ For example:
 
 . Create Pipeline resources
 
-Use the `pipeline-resource-template.yaml` file to create the `PipelineResources`. The `pipeline-resource-template.yaml` is provided in the `manual-pipeline-runs` directory. Update the docker-image URL. You can use the sample GitHub rep or update it to point to your own GitHub repo.
+Use the `pipeline-resource-template.yaml` file to create the `PipelineResources`. The `pipeline-resource-template.yaml` is provided in the Kabanero pipelines link:https://github.com/kabanero-io/kabanero-pipelines/tree/master/pipelines/incubator/manual-pipeline-runs[`manual-pipeline-runs` directory]. Update the docker-image URL. You can use the sample GitHub rep or update it to point to your own GitHub repo.
 
-After you update the file, apply it.
+After you update the file, apply it, as shown in the example below.
 
 ```
 oc apply -f <collection-name>-pipeline-resources.yaml
