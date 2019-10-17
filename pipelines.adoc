@@ -10,7 +10,7 @@ permalink: /guides/pipelines-getting-started/
 
 == Working with Kabanero Pipelines
 
-Kabanero uses link:https://github.com/tektoncd/pipeline/tree/master/docs#usage[Tekton Pipelines] to illustrate a continuous input and continuous delivery (CI/DI) workflow. Each of the featured link:https://github.com/kabanero-io/collections[Kabanero collections] contains a default pipeline that builds the collection, publishes the image to a docker repo, and then deploys the image to the Kubernetes cluster. You can add more tasks and pipelines to the collections. All the tasks and pipelines are activated by the link:https://github.com/kabanero-io/kabanero-operator[Kabanero operator].
+Kabanero uses link:https://github.com/tektoncd/pipeline/tree/master/docs#usage[Tekton Pipelines] to illustrate a continuous input and continuous delivery (CI/CD) workflow. Each of the featured link:https://github.com/kabanero-io/collections[Kabanero collections] contains a default pipeline that builds the collection, publishes the image to a docker repo, and then deploys the image to the Kubernetes cluster. You can add more tasks and pipelines to the collections. All the tasks and pipelines are activated by the link:https://github.com/kabanero-io/kabanero-operator[Kabanero operator].
 
 To learn more about Tekton Pipelines and creating new tasks, see link:https://github.com/tektoncd/pipeline/blob/master/docs/tutorial.md[the Tekton Pipeline tutorial].
 
@@ -52,7 +52,7 @@ Explore how to use Kabanero Pipelines to build and manage Kabanero collections.
 
 === Getting started
 
-==== Set up dynamic volume provisioning or a persistent volume.
+==== Set up dynamic volume provisioning or a persistent volume
 
 Tekton pipelines require a configured volume that is used by the framework to share data across tasks. The build task, which uses Buildah, also requires a volume mount. The minimum required volume size is five Gi.
 
@@ -92,7 +92,7 @@ Alternatively, you can configure secrets in the OKD console or you can set up th
 
 You can use the link:https://github.com/tektoncd/experimental/blob/master/webhooks-extension/docs/GettingStarted.md[Tekton Dashboard Webhook Extension] to drive pipelines that automatically build and deploy an application whenever you update the code in your Git repo. Events such as commits or pull requests can be set up to automatically trigger pipeline runs.
 
-=== Execute pipelines by using a script.
+=== Execute pipelines by using a script
 
 If you are developing a new pipeline and want to manually test it in a tight loop, you might want to use a script or manually drive the pipeline.
 
@@ -102,7 +102,7 @@ If you are developing a new pipeline and want to manually test it in a tight loo
  oc login <master node IP>:8443
 ```
 
-. Clone the kabanero pipelines repo
+. Clone the Kabanero pipelines repo
 
  git clone https://github.com/kabanero-io/kabanero-pipelines
 
@@ -129,7 +129,7 @@ For example:
  oc login <master node IP>:8443
 
 
-. Clone the kabanero pipelines repo
+. Clone the Kabanero pipelines repo
 
 
  git clone https://github.com/kabanero-io/kabanero-pipelines
@@ -140,7 +140,7 @@ For example:
 
 Use the `pipeline-resource-template.yaml` file to create the `PipelineResources`. The `pipeline-resource-template.yaml` is provided in the Kabanero pipelines link:https://github.com/kabanero-io/kabanero-pipelines/tree/master/pipelines/incubator/manual-pipeline-runs[`manual-pipeline-runs` directory]. Update the docker-image URL. You can use the sample GitHub rep or update it to point to your own GitHub repo.
 
-After you update the file, apply it, as shown in the example below.
+After you update the file, apply it, as shown in the following example:
 
 ```
 oc apply -f <collection-name>-pipeline-resources.yaml
