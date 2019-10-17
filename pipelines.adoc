@@ -47,7 +47,7 @@ For more information, see link:https://github.com/kabanero-io/kabanero-pipelines
 
 . link:https://github.com/kabanero-io/kabanero-foundation[Kabanero foundation] must be installed on Red Hat Origin Community Distribution of Kubernetes (OKD) or the OpenShift Container Platform (OCP) cluster.
 
-. link:https://github.com/tektoncd/dashboard[Tekton Dashboard] is installed by default with Kabanero Foundation. To find the Tekton Dashboard URL, login to your OKD cluster and run `+oc get routes+` or check in the OKD console.
+. link:https://github.com/tektoncd/dashboard[Tekton Dashboard] is installed by default with Kabanero Foundation. To find the Tekton Dashboard URL, login to your OKD cluster and run `+oc get routes+` or check in the OKD console. You can also find the dashboard URL from the Kabanero landing page in the OKD or OCP console.
 
 
 
@@ -67,6 +67,8 @@ Alternatively, if you are using an unmanaged cluster, you can set up a persisten
 oc login <master node IP>:8443
 ```
 
+. Clone the link:https://github.com/kabanero-io/kabanero-pipelines[kabanero-pipeplines repo]
+
 . Clone the `pv.yaml` file in this repo and apply it.
 
 ```
@@ -85,7 +87,7 @@ Alternatively, you can configure secrets in the OKD console or you can set up th
 
 === Execute pipelines by using the Tekton Dashboard Webhook Extension
 
-You can link:https://kabanero.io/docs/ref/general/tekton-webhooks.html[use the Tekton Dashboard Webhook Extension to drive pipelines] that automatically build and deploy an application whenever you update the code in your Git repo. Events such as commits or pull requests can be set up to automatically trigger pipeline runs.
+You can use the link:https://github.com/tektoncd/experimental/blob/master/webhooks-extension/docs/GettingStarted.md[Tekton Dashboard Webhook Extension] to drive pipelines that automatically build and deploy an application whenever you update the code in your Git repo. Events such as commits or pull requests can be set up to automatically trigger pipeline runs.
 
 === Manual pipeline execution using a script
 
@@ -134,7 +136,7 @@ cd kabanero-pipelines
 
 . Create Pipeline resources
 
-Update the `pipeline-resources.yaml` file with your GitHub & Docker repo information to create the `PipelineResources`. Sample `pipeline-resources.yaml` files are provided for each featured collection in the `manual-pipeline-runs` directory. Update the docker-image URL. You can use the sample GitHub rep or update it to point to your own GitHub repo.
+Use the `pipeline-resource-template.yaml` file to create the `PipelineResources`. The `pipeline-resource-template.yaml` is provided in the `manual-pipeline-runs` directory. Update the docker-image URL. You can use the sample GitHub rep or update it to point to your own GitHub repo.
 
 . After you update the file, apply it.
 
@@ -153,8 +155,7 @@ oc apply -f <pipeline.yaml>
 
 ==== Run the pipeline
 
-Sample PipelineRun files are provided under `./pipelines/manual-pipeline-runs`. Locate the appropriate pipeline-run
-file and execute it, as shown in the following example.
+A sample `pipelinerun` yaml file is provided in the `/pipelines/manual-pipeline-runs` directory. Rename the template file to `pipeline-run.yaml`, for example, and update the file to replace `collection-name` with the name of your collection. after you update the file, execute it as shown in the following example.
 
 ```
 oc apply -f <collection-name>-pipeline-run.yaml
