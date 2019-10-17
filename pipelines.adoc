@@ -18,8 +18,7 @@ To learn more about Tekton Pipelines and creating new tasks, see link:https://gi
 
 Each Kabanero collection contains default tasks & pipelines that are created when the collection is built. Currently,  all the featured collections share tasks & pipelines. The collections build process copies the files from link:https://github.com/kabanero-io/collections/tree/master/incubator/common/pipelines/default[the collections repo] to your `/pipelines` directory.
 
-If you are building a new collection, you can use these existing pipelines as they are if that satisfies your requirements to build and deploy. They are automatically pulled into your collection when you build your collections repo. If you want to change the tasks or pipelines, you can choose to have your changes apply either to all collections or a specific collection.  To apply your changes to all the collections,  update the files in the `incubator/common/pipelines/default` in your collections repo. If you want to update tasks or pipelines in a particular collection, create the files in the pipelines directory under that collection in your collections
-repo.
+If you are building a new collection, these existing pipelines are automatically pulled into your collection when you build your collections repo. If you want to customize the default tasks or pipelines to meet your needs, you can choose to apply your changes either to all collections or to a specific collection.  To apply your changes to all the collections,  update the files in the `incubator/common/pipelines/default` directory in your collections repo. If you want to update tasks or pipelines in a particular collection, create the files in the pipelines directory under that collection in your collections repo.
 
 === The build and deploy pipeline
 
@@ -41,7 +40,9 @@ By default, the pipelines run and deploy the application in the `+kabanero+` nam
 
 For more information, see link:https://github.com/kabanero-io/kabanero-pipelines[the kabanero-pipelines repo].
 
-== Running the pipelines
+== Running Kabanero pipelines
+
+Explore how to use Kabanero Pipelines to build and manage Kabanero collections.
 
 === Prerequisites
 
@@ -49,7 +50,7 @@ For more information, see link:https://github.com/kabanero-io/kabanero-pipelines
 
 . link:https://github.com/tektoncd/dashboard[Tekton Dashboard] is installed by default with Kabanero Foundation. To find the Tekton Dashboard URL, login to your OKD cluster and run `+oc get routes+` or check in the OKD console. You can also find the dashboard URL from the Kabanero landing page in the OKD or OCP console.
 
-
+=== Getting started
 
 ==== Set up dynamic volume provisioning or a persistent volume.
 
@@ -59,22 +60,24 @@ If your cluster is running in a public cloud, dynamic volume provisioning is the
 
 Your persistent volume must be configured based on how your cloud provider’s default storage class is configured. Otherwise, your pipelines might create a new volume for each run, which increases your pipeline run execution time.
 
-Alternatively, if you are using an unmanaged cluster, you can set up a persistent volume to be used by the pipeline. A simple example pv definition is provided in the following example. Update the path and other values in your `pv.yaml` file to suit your requirements. For instance, NFS is the preferred configuration in a production environment, rather than using local storage, as shown in the example.
+Alternatively, if you are using an unmanaged cluster, you can set up a persistent volume to be used by the pipeline. A simple persistent volume definition is provided in the following example. Update the path and other values in your `pv.yaml` file to suit your requirements. For instance, NFS is the preferred configuration in a production environment, rather than using local storage, as shown in the example.
 
 . Log in to your cluster. For example, for OKD:
 
-```
-oc login <master node IP>:8443
-```
+
+ oc login <master node IP>:8443
+
 
 . Clone the link:https://github.com/kabanero-io/kabanero-pipelines[kabanero-pipeplines repo]
 
+  git clone https://github.com/kabanero-io/kabanero-pipelines
+
 . Clone the `pv.yaml` file in this repo and apply it.
 
-```
-cd ./pipelines/common
-oc apply -f pv.yaml -n kabanero
-```
+
+ cd ./pipelines/common
+ oc apply -f pv.yaml -n kabanero
+
 
 ==== Create secrets
 
@@ -89,21 +92,20 @@ Alternatively, you can configure secrets in the OKD console or you can set up th
 
 You can use the link:https://github.com/tektoncd/experimental/blob/master/webhooks-extension/docs/GettingStarted.md[Tekton Dashboard Webhook Extension] to drive pipelines that automatically build and deploy an application whenever you update the code in your Git repo. Events such as commits or pull requests can be set up to automatically trigger pipeline runs.
 
-=== Manual pipeline execution using a script
+=== Execute pipelines by using a script.
 
 If you are developing a new pipeline and want to manually test it in a tight loop, you might want to use a script or manually drive the pipeline.
 
 . Log in to your cluster. For example for OKD,
 
-```
-oc login <master node IP>:8443
+
+ oc login <master node IP>:8443
 ```
 
 . Clone the kabanero pipelines repo
 
-```
-git clone https://github.com/kabanero-io/kabanero-pipelines
-```
+ git clone https://github.com/kabanero-io/kabanero-pipelines
+
 
 . Run the following script with the appropriate parameters
 
@@ -119,32 +121,32 @@ For example:
 ./manual-pipeline-run-script.sh -r https://github.com/mygitid/appsody-test-project -i index.docker.io/mydockeid/my-java-microprofile-image -c java-microprofile"
 ```
 
-=== Manual pipeline execution from the command line
+=== Execute pipelines manually from the command line
 
 . Login to your cluster. For example for OKD,
 
-```
-oc login <master node IP>:8443
-```
+
+ oc login <master node IP>:8443
+
 
 . Clone the kabanero pipelines repo
 
-```
-git clone https://github.com/kabanero-io/kabanero-pipelines
-cd kabanero-pipelines
-```
+
+ git clone https://github.com/kabanero-io/kabanero-pipelines
+ cd kabanero-pipelines
+
 
 . Create Pipeline resources
 
 Use the `pipeline-resource-template.yaml` file to create the `PipelineResources`. The `pipeline-resource-template.yaml` is provided in the `manual-pipeline-runs` directory. Update the docker-image URL. You can use the sample GitHub rep or update it to point to your own GitHub repo.
 
-. After you update the file, apply it.
+After you update the file, apply it.
 
 ```
 oc apply -f <collection-name>-pipeline-resources.yaml
 ```
 
-==== Activate tasks & pipelines
+=== Activate tasks & pipelines
 
 The installations that activate the featured collections also activate the tasks and pipelines. If you are creating a new task or pipeline, activate it manually, as shown in the following example.
 
@@ -153,7 +155,7 @@ oc apply -f <task.yaml>
 oc apply -f <pipeline.yaml>
 ```
 
-==== Run the pipeline
+=== Run the pipeline
 
 A sample `pipelinerun` yaml file is provided in the `/pipelines/manual-pipeline-runs` directory. Rename the template file to `pipeline-run.yaml`, for example, and update the file to replace `collection-name` with the name of your collection. after you update the file, execute it as shown in the following example.
 
@@ -174,9 +176,9 @@ in the sidebar menu.
 . Find your pipeline run in the list and click it to check the status and find logs. You can see logs
 and status of each step and task.
 
-=== Checking pipeline run status from the command line:
+=== Checking pipeline run status from the command line
 
-Enter the following command in the terminal
+Enter the following command in the terminal:
 
 ```
 oc get pipelineruns
@@ -190,3 +192,8 @@ If the pipeline run was successful, you should see a docker image in our docker 
 == Troubleshooting
 
 To find solutions for common issues and troubleshoot problems with pipelines, see the link:https://github.com/kabanero-io/kabanero-pipelines/blob/master/Troubleshooting.md[Kabanero Pipelines Troubleshooting Guide].
+
+=== Related links
+
+- link:https://www.youtube.com/watch?v=MfS05SU9yIM&feature=youtu.be[Kabanero pipelines demo video part one]
+- link:https://www.youtube.com/watch?v=643sJczM9bU&feature=youtu.be[Kabanero pipelines demo video part two]
