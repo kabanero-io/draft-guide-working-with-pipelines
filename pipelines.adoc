@@ -18,7 +18,7 @@ To learn more about Tekton Pipelines and creating new tasks, see link:https://gi
 
 Each Kabanero collection contains default tasks & pipelines that are created when the collection is built. Currently,  all the featured collections share tasks & pipelines. The collections build process copies the files from link:https://github.com/kabanero-io/collections/tree/master/incubator/common/pipelines/default[the collections repo] to your `/pipelines` directory.
 
-If you are building a new collection, you can use these existing pipelines as they are if that satisfies your requirements to build and deploy. They are automatically pulled into your collection when you build your collections repo. If you want to change the tasks or pipelines, you can choose to have your changes apply either to all collections or a specific collection.  To apply your changes to all the collections,  update the files in the `incubator/common/pipelines/default` in your collections repo. If you want to update tasks or pipelines in a particular collection, create the files in the `/pipelines` directory in your collections
+If you are building a new collection, you can use these existing pipelines as they are if that satisfies your requirements to build and deploy. They are automatically pulled into your collection when you build your collections repo. If you want to change the tasks or pipelines, you can choose to have your changes apply either to all collections or a specific collection.  To apply your changes to all the collections,  update the files in the `incubator/common/pipelines/default` in your collections repo. If you want to update tasks or pipelines in a particular collection, create the files in the pipelines directory under that collection in your collections
 repo.
 
 === The build and deploy pipeline
@@ -35,7 +35,9 @@ This file builds a container image from the artifacts in the git-source reposito
 
 - link:https://github.com/kabanero-io/collections/blob/master/incubator/common/pipelines/default/build-task.yaml[`Deploy-task.yaml`]
 
-This file modifies the `app-deploy.yaml` file, which describes the deployment options for the application. `Deploy-task` modifies `app-deploy.yaml` to point to the image that was published and deploys the application by using the Appsody operator. By default, the pipelines run and deploy the application in the `+kabanero+` namespace. If you want to deploy the application in a different namespace, update the `app-deploy.yaml` file to point to that namespace.
+This file modifies the `app-deploy.yaml` file, which describes the deployment options for the application. `Deploy-task` modifies `app-deploy.yaml` to point to the image that was published and deploys the application by using the Appsody operator. Generate your `app-deploy.yaml` file by running the `appsody deploy --generate-only` command.
+
+By default, the pipelines run and deploy the application in the `+kabanero+` namespace. If you want to deploy the application in a different namespace, update the `app-deploy.yaml` file to point to that namespace.
 
 For more information, see link:https://github.com/kabanero-io/kabanero-pipelines[the kabanero-pipelines repo].
 
