@@ -16,7 +16,7 @@ To learn more about Tekton Pipelines and creating new tasks, see link:https://gi
 
 == Kabanero Tasks and Pipelines
 
-Each Kabanero collection contains  a set of default tasks & pipelines that are created when the collection is built. The collections build process copies the task and pipeline files from link:https://github.com/kabanero-io/collections/tree/master/incubator/common/pipelines/default[the collections repo] to your `/pipelines` directory.
+Each Kabanero collection contains  a set of default tasks and pipelines that are created when the collection is built. The collections build process copies the task and pipeline files from link:https://github.com/kabanero-io/collections/tree/master/incubator/common/pipelines/default[the collections repo] to your `/pipelines` directory.
 
 If you are building a new collection, the default tasks and pipelines are automatically pulled into your collections repo. If you want to customize the default tasks or pipelines to meet your needs, you can choose to apply your changes either to all collections or to a specific collection.  To apply your changes to all the collections,  update the files in the `incubator/common/pipelines/default` directory in your collections repo. If you want to update tasks or pipelines in a particular collection, make your changes in the pipelines directory under that collection in your collections repo.
 
@@ -142,7 +142,7 @@ Use the `pipeline-resource-template.yaml` file to create the `PipelineResources`
  oc apply -f <collection-name>-pipeline-resources.yaml
 
 
-=== Activate tasks & pipelines
+=== Activate tasks and pipelines
 
 The installations that activate the featured collections also activate the tasks and pipelines. If you are creating a new task or pipeline, activate it manually, as shown in the following example.
 
