@@ -58,11 +58,11 @@ Explore how to use Kabanero Pipelines to build and manage Kabanero collections.
 
 Tekton pipelines require a configured volume that is used by the framework to share data across tasks. The build task, which uses Buildah, also requires a volume mount. The minimum required volume size is five Gi.
 
-If your cluster is running in a public cloud, dynamic volume provisioning is the easier and preferred option. For more information, see link:https://github.com/tektoncd/pipeline/blob/master/docs/install.md#how-are-resources-shared-between-tasks[How are resources shared between tasks].
+If your cluster is running in a public cloud, dynamic volume provisioning is the easier option. For more information, see link:https://github.com/tektoncd/pipeline/blob/master/docs/install.md#how-are-resources-shared-between-tasks[How are resources shared between tasks].
 
 Your persistent volume must be configured in accordance with your cloud provider’s default storage class. Otherwise, your pipelines might create a new volume for each run, which increases your pipeline run execution time.
 
-Alternatively, if you are using an unmanaged cluster, you can set up a persistent volume to be used by the pipeline. A simple persistent volume definition is provided in the following example. Update the path and other values in your `pv.yaml` file to suit your requirements. For instance, the following example is configured for local storage. You might edit this file to configure it for NFS, the preferred configuration in a production environment.
+Alternatively, if you are using an unmanaged cluster, you can set up a persistent volume to be used by the pipeline. A simple persistent volume definition is provided in the following example. Update the path and other values in your `pv.yaml` file to suit your requirements. For instance, the following example is configured for local storage. You might edit this file to configure it for NFS, the standard configuration in a production environment.
 
 . Log in to your cluster. For example, for OKD
 
@@ -153,7 +153,7 @@ oc apply -f <pipeline.yaml>
 
 === Run the pipeline
 
-A sample `manual-pipeline-run-template.yaml` file is provided in the link:https://github.com/kabanero-io/kabanero-pipelines/tree/master/pipelines/incubator/manual-pipeline-runs[`/pipelines/manual-pipeline-runs` directory]. Rename the template file to `pipeline-run.yaml`, for example, and update the file to replace `collection-name` with the name of your collection. After you update the file, execute it as shown in the following example.
+A sample `manual-pipeline-run-template.yaml` file is provided in the link:https://github.com/kabanero-io/kabanero-pipelines/tree/master/pipelines/incubator/manual-pipeline-runs[`/pipelines/manual-pipeline-runs` directory]. Rename the template file to `pipeline-run.yaml`, for example, and update the file to replace `collection-name` with the name of your collection. After you update the file, run it as shown in the following example.
 
 ```
 oc apply -f <collection-name>-pipeline-run.yaml
