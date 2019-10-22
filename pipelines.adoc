@@ -198,5 +198,6 @@ To find solutions for common issues and troubleshoot problems with pipelines, se
 
 - link:https://www.youtube.com/watch?v=MfS05SU9yIM&feature=youtu.be[Kabanero pipelines demo video part one]
 - link:https://www.youtube.com/watch?v=643sJczM9bU&feature=youtu.be[Kabanero pipelines demo video part two]
+- link:https://www.youtube.com/watch?v=M-5VqXtKyqw&feature=youtu.be[Kabanero pipelines demo video part three]
 - link:https://github.com/kabanero-io/kabanero-pipelines[kabanero-pipelines Repository]
 - link:https://github.com/tektoncd/pipeline/blob/master/docs/tutorial.md[Tekton Pipeline tutorial]
