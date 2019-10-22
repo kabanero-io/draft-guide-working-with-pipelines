@@ -114,10 +114,15 @@ If you are developing a new pipeline and want to manually test it in a tight loo
 
   ./manual-pipeline-run-script.sh -r [git_repo of the Appsody project] -i [docker registery path of the image to be created] -c [collections name of which pipeline to be run]"
 
- For example:
+ For example with dockerhub container registry:
 
 
  ./manual-pipeline-run-script.sh -r https://github.com/mygitid/appsody-test-project -i index.docker.io/mydockeid/my-java-microprofile-image -c java-microprofile"
+
+ For example with local openshift container registry:
+
+
+ ./manual-pipeline-run-script.sh -r https://github.com/mygitid/appsody-test-project -i docker-registry.default.svc:5000/kabanero/my-java-microprofile-image -c java-microprofile"
 
 
 === Execute pipelines manually from the command line
