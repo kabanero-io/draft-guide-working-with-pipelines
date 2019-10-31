@@ -54,15 +54,9 @@ Explore how to use Kabanero Pipelines to build and manage Kabanero collections.
 
 === Getting started
 
-==== Set up dynamic volume provisioning or a persistent volume
+==== Setting up of a persistent volume for running pipelines
 
-Tekton pipelines require a configured volume that is used by the framework to share data across tasks. The build task, which uses Buildah, also requires a volume mount. The minimum required volume size is five Gi.
-
-If your cluster is running in a public cloud, dynamic volume provisioning is the easier option. For more information, see link:https://github.com/tektoncd/pipeline/blob/master/docs/install.md#how-are-resources-shared-between-tasks[How are resources shared between tasks].
-
-Your persistent volume must be configured in accordance with your cloud provider’s default storage class. Otherwise, your pipelines might create a new volume for each run, which increases your pipeline run execution time.
-
-Alternatively, if you are using an unmanaged cluster, you can set up a persistent volume to be used by the pipeline. A simple persistent volume definition is provided in the following example. Update the path and other values in your `pv.yaml` file to suit your requirements. For instance, the following example is configured for local storage. You might edit this file to configure it for NFS, the standard configuration in a production environment.
+Tekton pipelines require a configured volume that is used by the framework to share data across tasks. The `build task`, which uses `Buildah`, also requires a volume mount. The pipelinerun should be creating a Persistent Volume Claim PVC with a requirement for 5 Gi persistent volume.
 
 . Log in to your cluster. For example, for OKD
 
@@ -73,13 +67,14 @@ Alternatively, if you are using an unmanaged cluster, you can set up a persisten
 . Clone the link:https://github.com/kabanero-io/kabanero-pipelines[kabanero-pipeplines repo]
 
   git clone https://github.com/kabanero-io/kabanero-pipelines
+  
+===== Static Persistent Volumes
 
-. Clone the `pv.yaml` file in this repo and apply it.
+If you are not running your openshift cluster on public cloud, you can setup the persistent volume statically. For example on the usage of static persistent volume provisioning you can go https://github.com/kabanero-io/kabanero-pipelines/blob/master/pipelines/docs/VolumeProvisioning.md#static-persistent-volumes[here]
 
+===== Dynamic Volume Provisioning
 
- cd ./pipelines/common
- oc apply -f pv.yaml -n kabanero
-
+If you are running your openshift cluster on a public cloud, you can take advantage of dynamically provisioning the persistent volume.You can use your cloud provider’s default storage class for it. For example on the usage of dynamic persistent volume provisioning you can go https://github.com/kabanero-io/kabanero-pipelines/blob/master/pipelines/docs/VolumeProvisioning.md#dynamic-volume-provisioning[here]
 
 ==== Create secrets
 
