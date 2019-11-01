@@ -64,7 +64,7 @@ Your persistent volume must be configured in accordance with your cloud provider
 
 Alternatively, if you are using an unmanaged cluster, you can set up a persistent volume to be used by the pipeline. A simple persistent volume definition is provided in the following example. Update the path and other values in your `pv.yaml` file to suit your requirements. For instance, the following example is configured for local storage. You might edit this file to configure it for NFS, the standard configuration in a production environment.
 
-. Log in to your cluster. For example, for OKD
+. Log in to your cluster. For example, for OKD:
 
 
  oc login <master node IP>:8443
@@ -99,12 +99,12 @@ If you are developing a new pipeline and want to manually test it in a tight loo
 
  oc login <master node IP>:8443
 
-. Clone the Kabanero pipelines repo
+. Clone the Kabanero pipelines repo.
 
  git clone https://github.com/kabanero-io/kabanero-pipelines
 
 
-. Run the following script with the appropriate parameters
+. Run the following script with the appropriate parameters.
 
 
   cd ./pipelines/incubator/manual-pipeline-runs/
@@ -119,7 +119,7 @@ If you are developing a new pipeline and want to manually test it in a tight loo
 
 === Execute pipelines manually from the command line
 
-. Login to your cluster. For example for OKD,
+. Log in to your cluster. For example, for OKD:
 
 
  oc login <master node IP>:8443
