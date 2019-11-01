@@ -16,7 +16,7 @@ To learn more about Tekton Pipelines and creating new tasks, see link:https://gi
 
 == Kabanero Tasks and Pipelines
 
-Each Kabanero collection contains  a set of default tasks and pipelines that are created when the collection is built. The collections build process copies the task and pipeline files from link:https://github.com/kabanero-io/collections/tree/master/incubator/common/pipelines/default[the collections repo] to your `/pipelines` directory.
+Each Kabanero collection contains a set of default tasks and pipelines that are created when the collection is built. The collections build process copies the task and pipeline files from link:https://github.com/kabanero-io/collections/tree/master/incubator/common/pipelines/default[the collections repo] to your `/pipelines` directory.
 
 If you are building a new collection, the default tasks and pipelines are automatically pulled into your collections repo. If you want to customize the default tasks or pipelines to meet your needs, you can choose to apply your changes either to all collections or to a specific collection.  To apply your changes to all the collections,  update the files in the `incubator/common/pipelines/default` directory in your collections repo. If you want to update tasks or pipelines in a particular collection, make your changes in the pipelines directory under that collection in your collections repo.
 
@@ -48,7 +48,7 @@ Explore how to use Kabanero Pipelines to build and manage Kabanero collections.
 
 . link:https://github.com/kabanero-io/kabanero-foundation[Kabanero foundation] must be installed on Red Hat Origin Community Distribution of Kubernetes (OKD) or the OpenShift Container Platform (OCP) cluster.
 
-. link:https://github.com/tektoncd/dashboard[Tekton Dashboard] is installed by default with Kabanero Foundation. To find the Tekton Dashboard URL, login to your OKD cluster and run `+oc get routes+` or check in the OKD console. You can also find the dashboard URL from the Kabanero landing page in the OKD or OCP console.
+. link:https://github.com/tektoncd/dashboard[Tekton Dashboard] is installed by default with Kabanero Foundation. To find the Tekton Dashboard URL, log in to your OKD cluster and run `+oc get routes+`, or check in the OKD console. You can also find the dashboard URL from the Kabanero landing page in the OKD or OCP console.
 
 . Dynamic volume provisioning or a persistent volume must be configured. See the following section for details.
 
@@ -83,12 +83,9 @@ Alternatively, if you are using an unmanaged cluster, you can set up a persisten
 
 ==== Create secrets
 
-Git secrets must be created in the `+kabanero+` namespace and associated with the service account that runs the pipelines. To configure secrets by using the Tekton Dashboard, see
-link:https://kabanero.io/docs/ref/general/tekton-webhooks.html#create-secrets[Create secrets].
+Git secrets must be created in the `+kabanero+` namespace and associated with the service account that runs the pipelines. To configure secrets by using the Tekton Dashboard, see link:https://kabanero.io/docs/ref/general/tekton-webhooks.html#create-secrets[Create secrets].
 
 Alternatively, you can link:https://docs.okd.io/latest/dev_guide/secrets.html#creating-secrets[configure secrets in the OKD console or set them up by using the OKD CLI].
-
-
 
 === Execute pipelines by using the Tekton Dashboard Webhook Extension
 
@@ -135,7 +132,7 @@ If you are developing a new pipeline and want to manually test it in a tight loo
 
 
 . Create Pipeline resources. +
-Use the `pipeline-resource-template.yaml` file to create the `PipelineResources`. The `pipeline-resource-template.yaml` is provided in the Kabanero pipelines link:https://github.com/kabanero-io/kabanero-pipelines/tree/master/pipelines/incubator/manual-pipeline-runs[`manual-pipeline-runs` directory]. Update the docker-image URL. You can use the sample GitHub rep or update it to point to your own GitHub repo.
+Use the `pipeline-resource-template.yaml` file to create the `PipelineResources`. The `pipeline-resource-template.yaml` is provided in the Kabanero pipelines link:https://github.com/kabanero-io/kabanero-pipelines/tree/master/pipelines/incubator/manual-pipeline-runs[`manual-pipeline-runs` directory]. Update the docker-image URL. You can use the sample GitHub repo or update it to point to your own GitHub repo.
 
 . After you update the file, apply it as shown in the following example:
 
