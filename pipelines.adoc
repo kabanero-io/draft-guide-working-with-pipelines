@@ -54,7 +54,7 @@ Explore how to use Kabanero Pipelines to build and manage Kabanero collections.
 
 === Getting started
 
-==== Setting up of a persistent volume for running pipelines
+==== Set up a persistent volume to run pipelines
 
 Tekton pipelines require a configured volume that is used by the framework to share data across tasks. The `build task`, which uses `Buildah`, also requires a volume mount. The pipelinerun should be creating a Persistent Volume Claim PVC with a requirement for 5 Gi persistent volume.
 
@@ -70,11 +70,11 @@ Tekton pipelines require a configured volume that is used by the framework to sh
   
 ===== Static Persistent Volumes
 
-If you are not running your openshift cluster on public cloud, you can setup the persistent volume statically. For example on the usage of static persistent volume provisioning you can go https://github.com/kabanero-io/kabanero-pipelines/blob/master/pipelines/docs/VolumeProvisioning.md#static-persistent-volumes[here]
+If you are not running your OpenShift cluster on a public cloud, you can set up a static persistent volume. For an example of how to use static persistent volume provisioning, see https://github.com/kabanero-io/kabanero-pipelines/blob/master/pipelines/docs/VolumeProvisioning.md#static-persistent-volumes[Static Persistent Volumes].
 
 ===== Dynamic Volume Provisioning
 
-If you are running your openshift cluster on a public cloud, you can take advantage of dynamically provisioning the persistent volume.You can use your cloud provider’s default storage class for it. For example on the usage of dynamic persistent volume provisioning you can go https://github.com/kabanero-io/kabanero-pipelines/blob/master/pipelines/docs/VolumeProvisioning.md#dynamic-volume-provisioning[here]
+If you run your OpenShift cluster on a public cloud, you can set up a dynamic persistent volume by using your cloud provider’s default storage class. For an example of how to use dynamic persistent volume provisioning, see https://github.com/kabanero-io/kabanero-pipelines/blob/master/pipelines/docs/VolumeProvisioning.md#dynamic-volume-provisioning[Dynamic Volume Provisioning].
 
 ==== Create secrets
 
