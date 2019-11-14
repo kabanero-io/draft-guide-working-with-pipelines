@@ -164,6 +164,19 @@ oc apply -f <collection-name>-pipeline-run.yaml
 You can check the status of the pipeline run from the OKD console,
 command line, or Tekton dashboard.
 
+
+===  Ashish Execute pipelines manually from the command line for your custom built Collections
+
+If you have your own custom build collection image and want to run any pipelines against it instead of out of box kabanero collections, then you need to follow below steps as per the required scenarios.
+
+=== Setup of container registry url for the custom Collection image
+
+. By default the pipelines assume you are pulling the collection from `kabanero` so it looks for the collection image in dockerhub repository. If you want to use
+
+==== For Collection image stored with internal openshift registry route url on the OCP cluster
+
+==== For Collection image stored with external container registry route url
+
 === Checking pipeline run status from the Tekton dashboard
 
 . Log in to the Tekton Dashboard and click `Pipeline runs'
