@@ -87,13 +87,13 @@ Git secrets must be created in the `+kabanero+` namespace and associated with th
 
 Alternatively, you can link:https://docs.okd.io/latest/dev_guide/secrets.html#creating-secrets[configure secrets in the OKD console or set them up by using the OKD CLI].
 
-=== Execute pipelines by using the Tekton Dashboard Webhook Extension
+=== Run pipelines by using the Tekton Dashboard Webhook Extension
 
 You can use the link:https://github.com/tektoncd/experimental/blob/master/webhooks-extension/docs/GettingStarted.md[Tekton Dashboard Webhook Extension] to drive pipelines that automatically build and deploy an application whenever you update the code in your Git repo. Events such as commits or pull requests can be set up to automatically trigger pipeline runs.
 
-=== Execute pipelines by using a script
+=== Run pipelines by using a script
 
-If you are developing a new pipeline and want to manually test it in a tight loop, you might want to use a script or manually drive the pipeline.
+If you are developing a new pipeline that you want to manually test in a tight loop, you can either use a script or manually drive the pipeline.
 
 . Log in to your cluster. For example for OKD,
 
@@ -117,7 +117,7 @@ If you are developing a new pipeline and want to manually test it in a tight loo
  ./manual-pipeline-run-script.sh -r https://github.com/mygitid/appsody-test-project -i index.docker.io/mydockeid/my-java-microprofile-image -c java-microprofile"
 
 
-=== Execute pipelines manually from the command line
+=== Run pipelines manually from the command line
 
 . Log in to your cluster. For example, for OKD:
 
