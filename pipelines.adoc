@@ -165,10 +165,9 @@ If you have your own custom build collection image and want to run any pipelines
 
 === Setup of container registry url for the custom Collection image
 
-By default the pipelines assume you are pulling the collection from `kabanero` so it looks for the collection image in dockerhub repository. If you want to use your container registry URL where you have the collection image you would need to follow below steps
+By default, the pipelines pull the collection images for docker hub. If you are publishing your collection images to any other repository, follow the instructions below to configure the custom repository that the pipelines should pull the collection images from.
 
 . After you have cloned kabanero-pipelines repository find the configmap template file `collection-image-registry-map.yaml` and add your container registry URL in it for the key `default-collection-image-registry-url` 
-. asdasd
 
 
  cd kabanero-pipelines/pipelines/common/
@@ -181,6 +180,8 @@ By default the pipelines assume you are pulling the collection from `kabanero` s
 ==== For Collection image stored in container registry with internal route url on the OCP cluster
 
 For internal openshift registry you need to only setup above `collection-image-registry-map.yaml` with the internal registry url.
+
+NOTE : The service account should let the pipelines pull from the internal registry without needing to configure a secret.
 
 ==== For Collection image stored in container registry with external route url
 
