@@ -176,15 +176,15 @@ By default, pipelines pull the collection images for Docker hub. If you are publ
 
  oc apply -f collection-image-registry-map.yaml
  
- ==== Set up a container registry URL for a custom collection image that is stored in a container registry with an internal route URL on the OCP cluster
+==== Set up a container registry URL for a custom collection image that is stored in a container registry with an internal route URL on the OCP cluster
  
  For an internal OpenShift registry, set up the collection-image-registry-map.yaml file with the internal registry URL.
  
  NOTE : In this case, the service account that is associated with the pipelines must be configured to allow the pipelines pull from the internal registry without configuring a secret.
  
- ==== Set up a container registry URL for a custom collection image that is stored in a container registry with an external route URL
+==== Set up a container registry URL for a custom collection image that is stored in a container registry with an external route URL
  
- For collection image with external container registry route url you need to setup a kubernetes secret in addition to above configured configmap as per below steps.
+For collection image with external container registry route url you need to setup a kubernetes secret in addition to above configured configmap as per below steps.
  
  . First, update the `collection-image-registry-map.yaml` file with your container registry file, as described in step 1 of Set up a container registry URL for the custom collection image.
  
