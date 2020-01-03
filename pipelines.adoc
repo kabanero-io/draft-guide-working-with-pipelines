@@ -181,7 +181,7 @@ By default, pipelines pull the collection images for Docker hub. If you are publ
 
 ==== Set up a container registry URL for a custom collection image that is stored in a container registry with an internal route URL on the OCP cluster
 
-For an internal OpenShift registry, set up the c`ollection-image-registry-map.yaml` file with the internal registry URL.
+For an internal OpenShift registry, set up the `collection-image-registry-map.yaml` file with the internal registry URL.
 
 NOTE : In this case, the service account that is associated with the pipelines must be configured to allow the pipelines pull from the internal registry without configuring a secret.
 
