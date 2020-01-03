@@ -159,6 +159,53 @@ A sample `manual-pipeline-run-template.yaml` file is provided in the link:https:
 oc apply -f <collection-name>-pipeline-run.yaml
 ```
 
+== Run pipelines from the command line for your custom built collections
+
+The following steps explain how to run pipelines against custom built collection images instead of the provided Kabanero collections.
+
+=== Set up a container registry URL for the custom collection image
+
+By default, pipelines pull the collection images for Docker hub. If you are publishing your collection images to any other repository, use the following process to configure the custom repository from which your pipelines pull the collection images.
+
+. After you clone the kabanero-pipelines repository, find the collection-image-registry-map.yaml configmap template file. Add your container registry URL to this file in place of the default-collection-image-registry-url statement.
+
+ cd kabanero-pipelines/pipelines/common/
+ vi collection-image-registry-map.yaml
+
+. Apply the following configmap file, which will set your container registry.
+
+ oc apply -f collection-image-registry-map.yaml
+ 
+ ==== Set up a container registry URL for a custom collection image that is stored in a container registry with an internal route URL on the OCP cluster
+ 
+ For an internal OpenShift registry, set up the collection-image-registry-map.yaml file with the internal registry URL.
+ 
+ NOTE : In this case, the service account that is associated with the pipelines must be configured to allow the pipelines pull from the internal registry without configuring a secret.
+ 
+ ==== Set up a container registry URL for a custom collection image that is stored in a container registry with an external route URL
+ 
+ For collection image with external container registry route url you need to setup a kubernetes secret in addition to above configured configmap as per below steps.
+ 
+ . First, update the `collection-image-registry-map.yaml` file with your container registry file, as described in step 1 of Set up a container registry URL for the custom collection image.
+ 
+. Find the template file `default-collection-image-registry-secret.yaml` in cloned kabanero-pipelines repo (kabanero-pipelines/pipelines/common) and update it with the username and token password for the container registry url you specified above.
+
+. Create a Base64 format version of the user name and password for the external route container registry url.
+
+ echo -n <your-registry-username> | base64
+ echo -n <your-registry-password> | base64
+
+. Update the `default-collection-image-registry-secret.yaml` file with the `Base64` formatted user name and password.
+
+ vi default-collection-image-registry-secret.yaml
+
+. Apply the `default-collection-image-registry-secret.yaml` file to the cluster
+
+ oc apply -f default-collection-image-registry-secret.yaml
+ 
+. You can now run the pipeline by following the steps in the preceding `Run pipelines from the command line for your custom built collections` section.
+
+
 == Checking the status of the pipeline run
 
 You can check the status of the pipeline run from the OKD console,
