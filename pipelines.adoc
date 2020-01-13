@@ -5,10 +5,9 @@ permalink: /guides/pipelines-getting-started/
 :page-duration: 30 minutes
 :page-releasedate: 2019-10-17
 :page-description: Explore how to use Kabanero Pipelines to build and manage Kabanero collections.
-:page-tags: ['Collection']
+:page-tags: ['Pipelines, Collection']
 :page-guide-category: pipelines
-
-== Working with Kabanero Pipelines
+= Working with Kabanero Pipelines
 
 Kabanero uses link:https://github.com/tektoncd/pipeline/tree/master/docs#usage[Tekton Pipelines] to illustrate a continuous input and continuous delivery (CI/CD) workflow. Each of the featured link:https://github.com/kabanero-io/collections[Kabanero collections] contains a default pipeline that builds the collection, publishes the image to a Docker repo, and then deploys the application to the Kubernetes cluster. You can also create your own tasks and pipelines and add them to the collections. All tasks and pipelines are activated by the link:https://github.com/kabanero-io/kabanero-operator[Kabanero operator].
 
@@ -59,14 +58,16 @@ Explore how to use Kabanero Pipelines to build and manage Kabanero collections.
 Tekton pipelines require a configured volume that is used by the framework to share data across tasks. The `build task`, which uses `Buildah`, also requires a volume mount. The pipelinerun creates a Persistent Volume Claim (PVC) with a requirement for five Gi of persistent volume.
 
 . Log in to your cluster. For example, for OKD
-
-
- oc login <master node IP>:8443
-
++
+----
+oc login <master node IP>:8443
+----
 
 . Clone the link:https://github.com/kabanero-io/kabanero-pipelines[kabanero-pipeplines repo]
-
-  git clone https://github.com/kabanero-io/kabanero-pipelines
++
+----
+git clone https://github.com/kabanero-io/kabanero-pipelines
+----
 
 ===== Static Persistent Volumes
 
@@ -94,71 +95,77 @@ You can use the link:https://github.com/tektoncd/experimental/blob/master/webhoo
 If you are developing a new pipeline and want to test it in a tight loop, you might want to use a script or manually drive the pipeline.
 
 . Log in to your cluster. For example for OKD,
-
- oc login <master node IP>:8443
-
++
+----
+oc login <master node IP>:8443
+----
 
 . Clone the Kabanero pipelines repo
-
- git clone https://github.com/kabanero-io/kabanero-pipelines
-
++
+----
+git clone https://github.com/kabanero-io/kabanero-pipelines
+----
 
 . Run the following script with the appropriate parameters
++
+----
+cd ./pipelines/incubator/manual-pipeline-runs/
+./manual-pipeline-run-script.sh -r [git_repo of the Appsody project] -i [docker registery path of the image to be created] -c [collections name of which pipeline to be run]"
+----
 
-
-  cd ./pipelines/incubator/manual-pipeline-runs/
-
-  ./manual-pipeline-run-script.sh -r [git_repo of the Appsody project] -i [docker registery path of the image to be created] -c [collections name of which pipeline to be run]"
-
-The following example is configured to use the dockerhub container registry:
-
-
+** The following example is configured to use the dockerhub container registry:
++
+----
  ./manual-pipeline-run-script.sh -r https://github.com/mygitid/appsody-test-project -i index.docker.io/mydockeid/my-java-microprofile-image -c java-microprofile"
+----
 
-The following example is configured to use the local openshift container registry:
-
-
+** The following example is configured to use the local openshift container registry:
++
+----
  ./manual-pipeline-run-script.sh -r https://github.com/mygitid/appsody-test-project -i docker-registry.default.svc:5000/kabanero/my-java-microprofile-image -c java-microprofile"
-
+----
 
 === Run pipelines manually from the command line
 
 . Login to your cluster. For example for OKD,
-
-
- oc login <master node IP>:8443
++
+----
+oc login <master node IP>:8443
+----
 
 . Clone the Kabanero pipelines repo.
++
+----
+git clone https://github.com/kabanero-io/kabanero-pipelines
+cd kabanero-pipelines
+----
 
-
- git clone https://github.com/kabanero-io/kabanero-pipelines
- cd kabanero-pipelines
-
-
-. Create Pipeline resources. +
+. Create Pipeline resources.
++
 Use the `pipeline-resource-template.yaml` file to create the `PipelineResources`. The `pipeline-resource-template.yaml` is provided in the Kabanero pipelines link:https://github.com/kabanero-io/kabanero-pipelines/tree/master/pipelines/incubator/manual-pipeline-runs[`manual-pipeline-runs` directory]. Update the docker-image URL. You can use the sample GitHub repo or update it to point to your own GitHub repo.
 
 . After you update the file, apply it as shown in the following example:
-
- oc apply -f <collection-name>-pipeline-resources.yaml
-
++
+----
+oc apply -f <collection-name>-pipeline-resources.yaml
+----
 
 === Activate tasks and pipelines
 
 The installations that activate the featured collections also activate the tasks and pipelines. If you are creating a new task or pipeline, activate it manually, as shown in the following example.
 
-
- oc apply -f <task.yaml>
- oc apply -f <pipeline.yaml>
-
+----
+oc apply -f <task.yaml>
+oc apply -f <pipeline.yaml>
+----
 
 === Run the pipeline
 
 A sample `manual-pipeline-run-template.yaml` file is provided in the link:https://github.com/kabanero-io/kabanero-pipelines/tree/master/pipelines/incubator/manual-pipeline-runs[`/pipelines/manual-pipeline-runs` directory]. Rename the template file to `pipeline-run.yaml`, for example, and update the file to replace `collection-name` with the name of your collection. After you update the file, run it as shown in the following example.
 
-
- oc apply -f <collection-name>-pipeline-run.yaml
-
+----
+oc apply -f <collection-name>-pipeline-run.yaml
+----
 
 == Run pipelines from the command line for your custom built collections
 
@@ -169,15 +176,17 @@ The following steps explain how to run pipelines against custom built collection
 By default, pipelines pull the collection images for Docker hub. If you are publishing your collection images to any other repository, use the following process to configure the custom repository from which your pipelines pull the collection images.
 
 . After you clone the `kabanero-pipelines` repository, find the `collection-image-registry-map.yaml` configmap template file. Add your container registry URL to this file in place of the `default-collection-image-registry-url` statement.
-
- cd kabanero-pipelines/pipelines/common/
- vi collection-image-registry-map.yaml
-
++
+----
+cd kabanero-pipelines/pipelines/common/
+vi collection-image-registry-map.yaml
+----
 
 . Apply the following configmap file, which will set your container registry.
-
- oc apply -f collection-image-registry-map.yaml
-
++
+----
+oc apply -f collection-image-registry-map.yaml
+----
 
 ==== Set up a container registry URL for a custom collection image that is stored in a container registry with an internal route URL on the OCP cluster
 
@@ -194,20 +203,25 @@ For a collection image with an external container registry route URL, you must s
 . Find the `default-collection-image-registry-secret.yaml` template file in the cloned kabanero-pipelines repo (`kabanero-pipelines/pipelines/common`) and update it with the username and token password for the container registry URL you specified previously.
 
 . Create a Base64 format version of the username and password for the external route container registry URL.
-
- echo -n <your-registry-username> | base64
- echo -n <your-registry-password> | base64
++
+----
+echo -n <your-registry-username> | base64
+echo -n <your-registry-password> | base64
+----
 
 . Update the `default-collection-image-registry-secret.yaml` file with the Base64 formatted username and password.
-
- vi default-collection-image-registry-secret.yaml
++
+----
+vi default-collection-image-registry-secret.yaml
+----
 
 . Apply the `default-collection-image-registry-secret.yaml` file to the cluster
-
- oc apply -f default-collection-image-registry-secret.yaml
++
+----
+oc apply -f default-collection-image-registry-secret.yaml
+----
 
 . You can now run the pipeline by following the steps in the preceding `Run pipelines from the command line for your custom built collections` section.
-
 
 == Check the status of the pipeline run
 
@@ -226,12 +240,12 @@ and status for each step and task.
 
 Enter the following command in the terminal:
 
+----
+oc get pipelineruns
+oc -n kabanero describe pipelinerun.tekton.dev/<pipeline-run-name>
+----
 
- oc get pipelineruns
- oc -n kabanero describe pipelinerun.tekton.dev/<pipeline-run-name>
-
-
-You can also see pods for the pipeline runs, for which you can specify `+oc describe+` and `+oc logs+` to get more details.
+You can also see pods for the pipeline runs, for which you can specify `oc describe` and `oc logs` to get more details.
 
 If the pipeline run was successful, you can see a Docker image in our Docker registry and a pod that’s running your application.
 
