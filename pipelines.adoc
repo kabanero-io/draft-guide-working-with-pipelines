@@ -7,8 +7,7 @@ permalink: /guides/pipelines-getting-started/
 :page-description: Explore how to use Kabanero Pipelines to build and manage Kabanero collections.
 :page-tags: ['Collection']
 :page-guide-category: pipelines
-
-== Build and deploy applications with Kabanero Pipelines
+= Build and deploy applications with Kabanero Pipelines
 
 Kabanero uses link:https://github.com/tektoncd/pipeline/tree/master/docs#usage[Tekton Pipelines] to illustrate a continuous input and continuous delivery (CI/CD) workflow. Each of the featured link:https://github.com/kabanero-io/collections[Kabanero collections] contains a default pipeline that builds the collection, publishes the image to a Docker repo, and then deploys the application to the Kubernetes cluster. You can also create your own tasks and pipelines and add them to the collections. All tasks and pipelines are activated by the link:https://github.com/kabanero-io/kabanero-operator[Kabanero operator].
 
