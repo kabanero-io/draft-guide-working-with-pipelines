@@ -8,7 +8,7 @@ permalink: /guides/pipelines-getting-started/
 :page-tags: ['Collection']
 :page-guide-category: pipelines
 
-== Working with Kabanero Pipelines
+== Build and deploy applications with Kabanero Pipelines
 
 Kabanero uses link:https://github.com/tektoncd/pipeline/tree/master/docs#usage[Tekton Pipelines] to illustrate a continuous input and continuous delivery (CI/CD) workflow. Each of the featured link:https://github.com/kabanero-io/collections[Kabanero collections] contains a default pipeline that builds the collection, publishes the image to a Docker repo, and then deploys the application to the Kubernetes cluster. You can also create your own tasks and pipelines and add them to the collections. All tasks and pipelines are activated by the link:https://github.com/kabanero-io/kabanero-operator[Kabanero operator].
 
@@ -20,9 +20,9 @@ Each Kabanero collection contains a set of default tasks and pipelines that are 
 
 If you are building a new collection, the default tasks and pipelines are automatically pulled into your collections repo. If you want to customize the default tasks or pipelines, you can choose to apply your changes either to all collections or to a specific collection.  To apply your changes to all the collections,  update the files in the `incubator/common/pipelines/default` directory in your collections repo. If you want to update tasks or pipelines in a particular collection, make your changes in the pipelines directory under that collection in your collections repo.
 
-=== The build and deploy pipeline
+=== The build, push and deploy pipeline
 
-link:https://github.com/kabanero-io/collections/blob/master/incubator/common/pipelines/default/build-deploy-pipeline.yaml[Build-deploy-pipeline.yaml]
+https://github.com/kabanero-io/collections/blob/master/incubator/common/pipelines/default/build-push-deploy-pipeline.yaml[Build-push-deploy-pipeline.yaml]
 
 This file is the primary pipeline that is associated with the collections. It validates that the collection is active, builds the Git source, publishes the container image, and deploys the application. It looks for `git-source` and `docker-image` resources that are used by the `build-task` and `deploy-task` files.
 
@@ -79,7 +79,7 @@ If you run your OpenShift cluster on a public cloud, you can set up a dynamic pe
 ==== Create secrets
 
 Git secrets must be created in the `+kabanero+` namespace and associated with the service account that runs the pipelines. To configure secrets by using the Tekton Dashboard, see
-link:https://kabanero.io/docs/ref/general/tekton-webhooks.html#create-secrets[Create secrets].
+link:https://kabanero.io/docs/ref/general/configuration/tekton-webhooks.html#create-secrets[Create secrets].
 
 Alternatively, you can link:https://docs.okd.io/latest/dev_guide/secrets.html#creating-secrets[configure secrets in the OKD console or set them up by using the OKD CLI].
 
