@@ -4,20 +4,20 @@ permalink: /guides/pipelines-getting-started/
 :page-layout: guide
 :page-duration: 30 minutes
 :page-releasedate: 2019-10-17
-:page-description: Explore how to use Kabanero Pipelines to build and manage Kabanero collections.
+:page-description: Explore how to use Pipelines with Collections 
 :page-tags: ['Pipelines, Collection']
 :page-guide-category: pipelines
 = Build and deploy applications with Kabanero Pipelines
 
-Kabanero uses link:https://github.com/tektoncd/pipeline/tree/master/docs#usage[Tekton Pipelines] to illustrate a continuous input and continuous delivery (CI/CD) workflow. Each of the featured link:https://github.com/kabanero-io/collections[Kabanero collections] contains a default pipeline that builds the collection, publishes the image to a Docker repo, and then deploys the application to the Kubernetes cluster. You can also create your own tasks and pipelines and add them to the collections. All tasks and pipelines are activated by the link:https://github.com/kabanero-io/kabanero-operator[Kabanero operator].
+Kabanero uses link:https://github.com/tektoncd/pipeline/tree/master/docs#usage[Tekton Pipelines] to illustrate a continuous input and continuous delivery (CI/CD) workflow. Each of the featured link:https://github.com/kabanero-io/collections[ Collections] contains a default pipeline that builds the collection, publishes the image to a container registry, and then deploys the application to the Kubernetes cluster. You can also create your own tasks and pipelines and customize the pre-built pipelines and tasks.   All tasks and pipelines are activated by  link:https://github.com/kabanero-io/kabanero-operator[Kabanero's standard Kubernetes Operator].
 
 To learn more about Tekton Pipelines and creating new tasks, see link:https://github.com/tektoncd/pipeline/blob/master/docs/tutorial.md[the Tekton Pipeline tutorial].
 
-== Kabanero Tasks and Pipelines
+== Tasks and Pipelines
 
-Each Kabanero collection contains a set of default tasks and pipelines that are created when the collection is built. The collections build process copies the task and pipeline files from link:https://github.com/kabanero-io/collections/tree/master/incubator/common/pipelines/default[the collections repo] to your `/pipelines` directory.
+Each collection contains a set of default tasks and pipelines that are created when the collection is built. The collections build process copies the task and pipeline files from link:https://github.com/kabanero-io/collections/tree/master/incubator/common/pipelines/default[the collections repo] to your `/pipelines` directory.
 
-If you are building a new collection, the default tasks and pipelines are automatically pulled into your collections repo. If you want to customize the default tasks or pipelines, you can choose to apply your changes either to all collections or to a specific collection.  To apply your changes to all the collections,  update the files in the `incubator/common/pipelines/default` directory in your collections repo. If you want to update tasks or pipelines in a particular collection, make your changes in the pipelines directory under that collection in your collections repo.
+If you are building a new collection, the default tasks and pipelines are automatically pulled into your collections repo. If you want to customize the default tasks or pipelines, you can choose to apply your changes either to all Application Stacks or to a specific Application Stack.  To apply your changes to all,  update the files in the `incubator/common/pipelines/default` directory in your collections repo. If you want to update tasks or pipelines for one, make your changes in the pipelines directory under that collection in your collections repo.
 
 === The build, push and deploy pipeline
 
@@ -39,15 +39,15 @@ By default, the pipelines run and deploy the application in the `+kabanero+` nam
 
 For more information, see link:https://github.com/kabanero-io/kabanero-pipelines[the kabanero-pipelines repo].
 
-== Running Kabanero pipelines
+== Running Pipelines
 
-Explore how to use Kabanero Pipelines to build and manage Kabanero collections.
+Explore how to use Pipelines to build and manage Collections.
 
 === Prerequisites
 
-. link:https://github.com/kabanero-io/kabanero-foundation[Kabanero foundation] must be installed on Red Hat Origin Community Distribution of Kubernetes (OKD) or the OpenShift Container Platform (OCP) cluster.
+. link:https://github.com/kabanero-io/kabanero-foundation[Kabanero foundation] must be installed on Red Hat Origin Community Distribution of Kubernetes (OKD) or the OpenShift Container Platform (OCP) cluster.  At present Kabanero 0.3.0 and greater only supports OCP 4.2+.  When OKD provides a comparable 4.x stream, Kabanero will again support OKD providing a full open source stack.
 
-. link:https://github.com/tektoncd/dashboard[Tekton Dashboard] is installed by default with Kabanero Foundation. To find the Tekton Dashboard URL, login to your OKD cluster and run the `+oc get routes+` command or check in the OKD console. You can also find the dashboard URL from the Kabanero landing page in the OKD or OCP console.
+. link:https://github.com/tektoncd/dashboard[Tekton Dashboard] is installed by default with Kabanero's Kubernetes Operator. To find the Tekton Dashboard URL, login to your cluster and run the `+oc get routes+` command or check in the console. You can also find the dashboard URL from the Kabanero getting started page in the OKD or OCP console.
 
 . Dynamic volume provisioning or a persistent volume must be configured. See the following section for details.
 
@@ -55,9 +55,9 @@ Explore how to use Kabanero Pipelines to build and manage Kabanero collections.
 
 ==== Set up a persistent volume to run pipelines
 
-Tekton pipelines require a configured volume that is used by the framework to share data across tasks. The `build task`, which uses `Buildah`, also requires a volume mount. The pipelinerun creates a Persistent Volume Claim (PVC) with a requirement for five Gi of persistent volume.
+Pipelines require a configured volume that is used by the framework to share data across tasks. The `build task`, which uses `Buildah`, also requires a volume mount. The pipelinerun creates a Persistent Volume Claim (PVC) with a requirement for five Gi of persistent volume.
 
-. Log in to your cluster. For example, for OKD
+. Log in to your cluster. For example, 
 +
 ----
 oc login <master node IP>:8443
@@ -94,7 +94,7 @@ You can use the link:https://github.com/tektoncd/experimental/blob/master/webhoo
 
 If you are developing a new pipeline and want to test it in a tight loop, you might want to use a script or manually drive the pipeline.
 
-. Log in to your cluster. For example for OKD,
+. Log in to your cluster. For example,
 +
 ----
 oc login <master node IP>:8443
@@ -127,7 +127,7 @@ cd ./pipelines/incubator/manual-pipeline-runs/
 
 === Run pipelines manually from the command line
 
-. Login to your cluster. For example for OKD,
+. Login to your cluster. For example,
 +
 ----
 oc login <master node IP>:8443
@@ -173,7 +173,7 @@ The following steps explain how to run pipelines against custom built collection
 
 === Set up a container registry URL for the custom collection image
 
-By default, pipelines pull the collection images for Docker hub. If you are publishing your collection images to any other repository, use the following process to configure the custom repository from which your pipelines pull the collection images.
+By default, pipelines pull the collection images for Docker hub. If you are publishing your collection images to any other repository, use the following process to configure the custom repository from which your pipelines pull the container images.
 
 . After you clone the `kabanero-pipelines` repository, find the `collection-image-registry-map.yaml` configmap template file. Add your container registry URL to this file in place of the `default-collection-image-registry-url` statement.
 +
@@ -196,7 +196,7 @@ NOTE : In this case, the service account that is associated with the pipelines m
 
 ==== Set up a container registry URL for a custom collection image that is stored in a container registry with an external route URL
 
-For a collection image with an external container registry route URL, you must set up a Kubernetes secret. To set up this secret, update the `default-collection-image-registry-secret.yaml` template file with a Base64 formatted username and password and apply it to the cluster, as described in the following steps.
+For a container image with an external container registry route URL, you must set up a Kubernetes secret. To set up this secret, update the `default-collection-image-registry-secret.yaml` template file with a Base64 formatted username and password and apply it to the cluster, as described in the following steps.
 
 . First, update the `collection-image-registry-map.yaml` file with your container registry file, as described in step 1 of `Set up a container registry URL for the custom collection image`.
 
