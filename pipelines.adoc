@@ -21,7 +21,7 @@ If you are building a new application stack, the default tasks and pipelines are
 
 === The build, push and deploy pipeline
 
-https://github.com/kabanero-io/collections/blob/master/incubator/common/pipelines/default/build-push-deploy-pipeline.yaml[Build-push-deploy-pipeline.yaml]
+https://github.com/kabanero-io/collections/blob/master/incubator/common/pipelines/default/build-deploy-pl.yaml[build-deploy-pl.yaml]
 
 This file is the primary pipeline that is associated with the application stack hub. It validates that the application stack is active, builds the Git source, publishes the container image, and deploys the application. It looks for `git-source` and `docker-image` resources that are used by the `build-task` and `deploy-task` files.
 
@@ -175,22 +175,22 @@ The following steps explain how to run pipelines against custom built applicatio
 
 By default, pipelines pull the application stack images for Docker hub. If you are publishing your application stack images to any other repository, use the following process to configure the custom repository from which your pipelines pull the container images.
 
-. After you clone the `kabanero-pipelines` repository, find the `collection-image-registry-map.yaml` configmap template file. Add your container registry URL to this file in place of the `default-collection-image-registry-url` statement.
+. After you clone the `kabanero-pipelines` repository, find the `stack-image-registry-map.yaml` configmap template file. Add your container registry URL to this file in place of the `default-stack-image-registry-url` statement.
 +
 ----
 cd kabanero-pipelines/pipelines/common/
-vi collection-image-registry-map.yaml
+vi stack-image-registry-map.yaml
 ----
 
 . Apply the following configmap file, which will set your container registry.
 +
 ----
-oc apply -f collection-image-registry-map.yaml
+oc apply -f stack-image-registry-map.yaml
 ----
 
 ==== Set up a container registry URL for a custom application stack image that is stored in a container registry with an internal route URL on the cluster
 
-For an internal OpenShift registry, set up the `collection-image-registry-map.yaml` file with the internal registry URL.
+For an internal OpenShift registry, set up the `stack-image-registry-map.yaml` file with the internal registry URL.
 
 NOTE : In this case, the service account that is associated with the pipelines must be configured to allow the pipelines pull from the internal registry without configuring a secret.
 
@@ -198,9 +198,9 @@ NOTE : In this case, the service account that is associated with the pipelines m
 
 For a container image with an external container registry route URL, you must set up a Kubernetes secret. To set up this secret, update the `default-collection-image-registry-secret.yaml` template file with a Base64 formatted username and password and apply it to the cluster, as described in the following steps.
 
-. First, update the `collection-image-registry-map.yaml` file with your container registry file, as described in step 1 of `Set up a container registry URL for the custom application stack image`.
+. First, update the `stack-image-registry-map.yaml` file with your container registry file, as described in step 1 of `Set up a container registry URL for the custom application stack image`.
 
-. Find the `default-collection-image-registry-secret.yaml` template file in the cloned kabanero-pipelines repo (`kabanero-pipelines/pipelines/common`) and update it with the username and token password for the container registry URL you specified previously.
+. Find the `default-stack-image-registry-secret.yaml` template file in the cloned kabanero-pipelines repo (`kabanero-pipelines/pipelines/common`) and update it with the username and token password for the container registry URL you specified previously.
 
 . Create a Base64 format version of the username and password for the external route container registry URL.
 +
@@ -209,16 +209,16 @@ echo -n <your-registry-username> | base64
 echo -n <your-registry-password> | base64
 ----
 
-. Update the `default-collection-image-registry-secret.yaml` file with the Base64 formatted username and password.
+. Update the `default-stack-image-registry-secret.yaml` file with the Base64 formatted username and password.
 +
 ----
-vi default-collection-image-registry-secret.yaml
+vi default-stack-image-registry-secret.yaml
 ----
 
-. Apply the `default-collection-image-registry-secret.yaml` file to the cluster
+. Apply the `default-stack-image-registry-secret.yaml` file to the cluster
 +
 ----
-oc apply -f default-collection-image-registry-secret.yaml
+oc apply -f default-stack-image-registry-secret.yaml
 ----
 
 . You can now run the pipeline by following the steps in the preceding `Run pipelines from the command line for your custom built application stacks` section.
