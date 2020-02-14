@@ -13,7 +13,7 @@ Kabanero uses link:https://github.com/tektoncd/pipeline/tree/master/docs#usage [
 
 To learn more about pipelines and creating new tasks, see link:https://github.com/tektoncd/pipeline/blob/master/docs/tutorial.md[the pipeline tutorial].
 
-== Default Tasks and Pipelines
+== Default tasks and pipelines
 
 The default Kabanero tasks and pipelines are provided in the link:https://github.com/kabanero-io/kabanero-pipelines/tree/master/pipelines/incubator[Kabanero pipelines repository].  These can be associated with an application stack in the Kabanero custom resource definition (CRD).  This is an example CRD:
 
@@ -24,8 +24,8 @@ metadata:
   name: kabanero
 spec:
   version: "0.6.0"
-  stacks: 
-    repositories: 
+  stacks:
+    repositories:
     - name: central
       https:
         url: https://github.com/kabanero-io/collections/releases/download/0.5.0/kabanero-index.yaml
@@ -42,9 +42,9 @@ When the Kabanero operator activates the CRD, it associates the pipelines in the
 
 === Updating default tasks and pipelines
 
-The default tasks and pipelines can be updated by forking the Kabanero Pipelines repo and editing the files under `pipelines/incubator`.  The easiest way to generate the archive for use by the Kabanero CRD is to run the  link:https://github.com/kabanero-io/kabanero-pipelines/blob/master/ci/package.sh[package.sh] script or run the travis build against a release of your pipelines repo.  The script generates the archive file with the necessary pipeline artifacts and a manifest.yaml that describes the contents of the archive.  
+The default tasks and pipelines can be updated by forking the Kabanero Pipelines repo and editing the files under `pipelines/incubator`.  The easiest way to generate the archive for use by the Kabanero CRD is to run the  link:https://github.com/kabanero-io/kabanero-pipelines/blob/master/ci/package.sh[package.sh] script or run the travis build against a release of your pipelines repo.  The script generates the archive file with the necessary pipeline artifacts and a manifest.yaml that describes the contents of the archive.
 
-=== Creating New Tasks & Pipelines
+== Creating new tasks and pipelines
 
 
 === The build, push and deploy pipeline
@@ -75,7 +75,7 @@ Explore how to use pipelines to build and manage application stacks.
 
 . link:https://github.com/kabanero-io/kabanero-foundation[Kabanero foundation] must be installed on a supported Kubernetes deployment.
 
-. link:https://github.com/tektoncd/dashboard[A pipelines dashboard] is installed by default with Kabanero's Kubernetes operator. To find the pipelines dashboard URL, login to your cluster and run the `+oc get routes+` command or in the Kabanero landing page. 
+. link:https://github.com/tektoncd/dashboard[A pipelines dashboard] is installed by default with Kabanero's Kubernetes operator. To find the pipelines dashboard URL, login to your cluster and run the `+oc get routes+` command or in the Kabanero landing page.
 
 . A persistent volume must be configured. See the following section for details.
 
@@ -83,7 +83,7 @@ Explore how to use pipelines to build and manage application stacks.
 
 === Getting started
 
-==== Set up a persistent volume to run pipelines
+==== Setting up a persistent volume to run pipelines
 
 Pipelines require a configured volume that is used by the framework to share data across tasks.  The pipelinerun creates a Persistent Volume Claim (PVC) with a requirement for five GB of persistent volume.
 
@@ -104,11 +104,11 @@ Alternatively, you can link:https://docs.okd.io/latest/dev_guide/secrets.html#cr
 
 
 
-=== Run pipelines by using the pipelines dashboard webhook extension
+=== Running pipelines by using the pipelines dashboard webhook extension
 
 You can use the link:https://github.com/tektoncd/experimental/blob/master/webhooks-extension/docs/GettingStarted.md[pipelines dashboard webhook extension] to drive pipelines that automatically build and deploy an application whenever you update the code in your Git repo. Events such as commits or pull requests can be set up to automatically trigger pipeline runs.
 
-=== Run pipelines by using a script
+=== Running pipelines by using a script
 
 If you are developing a new pipeline and want to test it in a tight loop, you might want to use a script or manually drive the pipeline.
 
@@ -143,7 +143,7 @@ cd ./pipelines/sample-helper-files/
  ./manual-pipeline-run-script.sh -r https://github.com/mygitid/appsody-test-project -i docker-registry.default.svc:5000/kabanero/my-java-microprofile-image -c java-microprofile"
 ----
 
-=== Run pipelines manually from the command line
+=== Running pipelines manually from the command line
 
 . Login to your cluster. For example,
 +
@@ -168,7 +168,7 @@ Use the `pipeline-resource-template.yaml` file to create the `PipelineResources`
 oc apply -f <stack-name>-pipeline-resources.yaml
 ----
 
-=== Activate tasks and pipelines
+=== Activating tasks and pipelines
 
 The installations that activate the featured application stacks also activate the tasks and pipelines. If you are creating a new task or pipeline, activate it manually, as shown in the following example.
 
@@ -185,7 +185,7 @@ A sample `manual-pipeline-run-template.yaml` file is provided in the link:kabane
 oc apply -f <application-stack-name>-pipeline-run.yaml
 ----
 
-== Run pipelines from the command line for your custom built application stacks
+== Running pipelines from the command line for your custom built application stacks
 
 The following steps explain how to run pipelines against custom built application stack images instead of the provided application stacks.
 
@@ -206,13 +206,13 @@ vi stack-image-registry-map.yaml
 oc apply -f stack-image-registry-map.yaml
 ----
 
-==== Set up a container registry URL for a custom application stack image that is stored in a container registry with an internal route URL on the cluster
+==== Setting up a container registry URL for a custom application stack image that is stored in a container registry with an internal route URL on the cluster
 
 For an internal OpenShift registry, set up the `stack-image-registry-map.yaml` file with the internal registry URL.
 
 NOTE : In this case, the service account that is associated with the pipelines must be configured to allow the pipelines pull from the internal registry without configuring a secret.
 
-==== Set up a container registry URL for a custom application stack image that is stored in a container registry with an external route URL
+==== Setting up a container registry URL for a custom application stack image that is stored in a container registry with an external route URL
 
 For a container image with an external container registry route URL, you must set up a Kubernetes secret. To set up this secret, update the `default-stack-image-registry-secret.yaml` template file with a Base64 formatted username and password and apply it to the cluster, as described in the following steps.
 
@@ -241,12 +241,12 @@ oc apply -f default-stack-image-registry-secret.yaml
 
 . You can now run the pipeline by following the steps in the preceding `Run pipelines from the command line for your custom built application stacks` section.
 
-== Check the status of the pipeline run
+== Checking the status of the pipeline run
 
 You can check the status of the pipeline run from the Kubernetes console,
 command line, or pipelines dashboard.
 
-=== Check pipeline run status from the pipelines dashboard
+=== Checking pipeline run status from the pipelines dashboard
 
 . Log in to the pipelines dashboard and click `Pipeline runs'
 in the sidebar menu.
@@ -254,7 +254,7 @@ in the sidebar menu.
 . Find your pipeline run in the list and click it to check the status and find logs. You can see logs
 and status for each step and task.
 
-=== Check pipeline run status from the command line
+=== Checking pipeline run status from the command line
 
 Enter the following command in the terminal:
 
