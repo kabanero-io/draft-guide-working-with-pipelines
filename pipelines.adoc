@@ -9,21 +9,49 @@ permalink: /guides/pipelines-getting-started/
 :page-guide-category: pipelines
 = Build and deploy applications with pipelines
 
-Kabanero uses link:https://github.com/tektoncd/pipeline/tree/master/docs#usage[pipelines] to illustrate a continuous input and continuous delivery (CI/CD) workflow. Each of the featured link:https://github.com/kabanero-io/collections[application stacks] contains a default pipeline that builds the application stack, publishes the image to a container registry, and then deploys the application to the Kubernetes cluster. You can also create your own tasks and pipelines and customize the pre-built pipelines and tasks.   All tasks and pipelines are activated by  link:https://github.com/kabanero-io/kabanero-operator[Kabanero's standard Kubernetes operator].
+Kabanero uses link:https://github.com/tektoncd/pipeline/tree/master/docs#usage [pipelines] to illustrate a continuous input and continuous delivery (CI/CD) workflow. Kabanero provides a set of default tasks and pipelines that can be associated with application stacks.  These pipelines validate the application stack is active, build the application stack, publish the image to a container registry, scan the published image, and then deploy the application to the Kubernetes cluster. You can also create your own tasks and pipelines and customize the pre-built pipelines and tasks. All tasks and pipelines are activated by  link:https://github.com/kabanero-io/kabanero-operator[Kabanero's standard Kubernetes operator].
 
 To learn more about pipelines and creating new tasks, see link:https://github.com/tektoncd/pipeline/blob/master/docs/tutorial.md[the pipeline tutorial].
 
-== Tasks and Pipelines
+== Default Tasks and Pipelines
 
-Each application stack contains a set of default tasks and pipelines that are created when the application stack is built. The application stack build process copies the task and pipeline files from link:https://github.com/kabanero-io/collections/tree/master/incubator/common/pipelines/default[the application stack repo] to your `/pipelines` directory.
+The default Kabanero tasks and pipelines are provided in the link:https://github.com/kabanero-io/kabanero-pipelines/tree/master/pipelines/incubator[Kabanero pipelines repository].  These can be associated with an application stack in the Kabanero custom resource definition (CRD).  This is an example CRD:
 
-If you are building a new application stack, the default tasks and pipelines are automatically pulled into your application stack hub repo. If you want to customize the default tasks or pipelines, you can choose to apply your changes either to all application stacks or to a specific application stack.  To apply your changes to all,  update the files in the `incubator/common/pipelines/default` directory in your application stack hub repo. If you want to update tasks or pipelines for one, make your changes in the pipelines directory under that application stack in your application stack hub repo.
+```
+apiVersion: kabanero.io/v1alpha1
+kind: Kabanero
+metadata:
+  name: kabanero
+spec:
+  version: "0.6.0"
+  stacks: 
+    repositories: 
+    - name: central
+      https:
+        url: https://github.com/kabanero-io/collections/releases/download/0.5.0/kabanero-index.yaml
+    pipelines:
+    - id: default
+      sha256: 14d59b7ebae113c18fb815c2ccfd8a846c5fbf91d926ae92e0017ca5caf67c95
+      https:
+        url: https://github.com/kabanero-io/kabanero-pipelines/releases/download/0.6.0/default-kabanero-pipelines.tar.gz
+```
+
+When the Kabanero operator activates the CRD, it associates the pipelines in the pipelines archive with each of the stacks in the stack hub.  The default pipelines are intended to work with all the stacks in the stack hub in the previous example. All of the pipeline-related resources (such as the tasks, trigger bindings, and pipelines) prefix the name of the resource with the keyword `StackId`.  When the operator activates these resources, it replaces the keyword
+
+ with the name of the stack it is activating.
+
+=== Updating default tasks and pipelines
+
+The default tasks and pipelines can be updated by forking the Kabanero Pipelines repo and editing the files under `pipelines/incubator`.  The easiest way to generate the archive for use by the Kabanero CRD is to run the  link:https://github.com/kabanero-io/kabanero-pipelines/blob/master/ci/package.sh[package.sh] script or run the travis build against a release of your pipelines repo.  The script generates the archive file with the necessary pipeline artifacts and a manifest.yaml that describes the contents of the archive.  
+
+=== Creating New Tasks & Pipelines
+
 
 === The build, push and deploy pipeline
 
-https://github.com/kabanero-io/collections/blob/master/incubator/common/pipelines/default/build-deploy-pl.yaml[build-deploy-pl.yaml]
+- link:https://github.com/kabanero-io/kabanero-pipelines/blob/master/pipelines/incubator/build-deploy-pl.yaml[build-deploy-pl.yaml]
 
-This file is the primary pipeline that is associated with the application stack hub. It validates that the application stack is active, builds the Git source, publishes the container image, and deploys the application. It looks for `git-source` and `docker-image` resources that are used by the `build-task` and `deploy-task` files.
+This file is the primary pipeline that showcases all the tasks supplied in the Kabanero repo. It validates that the application stack is active, builds the application stack, publishes the application image to the container registry, does a security scan of the image, and conditionally deploys the application. When running the pipeline via a webhook, the pipeline  leverages the tekton triggers functionality to conditionally deploy the application only when a pull request is merged in the git repo.  Other actions that trigger the pipeline run, will validate, build, push, and scan the image.
 
 === Tasks
 
@@ -47,37 +75,27 @@ Explore how to use pipelines to build and manage application stacks.
 
 . link:https://github.com/kabanero-io/kabanero-foundation[Kabanero foundation] must be installed on a supported Kubernetes deployment.
 
-. link:https://github.com/tektoncd/dashboard[A pipelines dashboard] is installed by default with Kabanero's Kubernetes operator. To find the pipelines dashboard URL, login to your cluster and run the `+oc get routes+` command or check in the console. You can also find the dashboard URL from the getting started page in the Kubernetes console.
+. link:https://github.com/tektoncd/dashboard[A pipelines dashboard] is installed by default with Kabanero's Kubernetes operator. To find the pipelines dashboard URL, login to your cluster and run the `+oc get routes+` command or in the Kabanero landing page. 
 
-. Dynamic volume provisioning or a persistent volume must be configured. See the following section for details.
+. A persistent volume must be configured. See the following section for details.
+
+. Secrets for the git repo (if private) and image repository
 
 === Getting started
 
 ==== Set up a persistent volume to run pipelines
 
-Pipelines require a configured volume that is used by the framework to share data across tasks. The `build task`, which uses `Buildah`, also requires a volume mount. The pipelinerun creates a Persistent Volume Claim (PVC) with a requirement for five GB of persistent volume.
-
-. Log in to your cluster. For example,
-+
-----
-oc login <master node IP>:8443
-----
-
-. Clone the link:https://github.com/kabanero-io/kabanero-pipelines[kabanero-pipeplines repo]
-+
-----
-git clone https://github.com/kabanero-io/kabanero-pipelines
-----
+Pipelines require a configured volume that is used by the framework to share data across tasks.  The pipelinerun creates a Persistent Volume Claim (PVC) with a requirement for five GB of persistent volume.
 
 ===== Static persistent volumes
 
-If you are not running your cluster on a public cloud, you can set up a static persistent volume. For an example of how to use static persistent volume provisioning, see https://github.com/kabanero-io/kabanero-pipelines/blob/master/pipelines/docs/VolumeProvisioning.md#static-persistent-volumes[Static persistent volumes].
+If you are not running your cluster on a public cloud, you can set up a static persistent volume using NFS. For an example of how to use static persistent volume provisioning, see https://github.com/kabanero-io/kabanero-pipelines/blob/master/docs/VolumeProvisioning.md#static-persistent-volumes[Static persistent volumes].
 
 ===== Dynamic volume provisioning
 
-If you run your cluster on a public cloud, you can set up a dynamic persistent volume by using your cloud provider’s default storage class. For an example of how to use dynamic persistent volume provisioning, see https://github.com/kabanero-io/kabanero-pipelines/blob/master/pipelines/docs/VolumeProvisioning.md#dynamic-volume-provisioning[Dynamic volume provisioning].
+If you run your cluster on a public cloud, you can set up a dynamic persistent volume by using your cloud provider’s default storage class. For an example of how to use dynamic persistent volume provisioning, see link:https://github.com/kabanero-io/kabanero-pipelines/blob/master/docs/VolumeProvisioning.md#dynamic-volume-provisioning[Dynamic volume provisioning].
 
-==== Create secrets
+==== Creating secrets
 
 Git secrets must be created in the `+kabanero+` namespace and associated with the service account that runs the pipelines. To configure secrets using the pipelines dashboard, see
 link:https://kabanero.io/docs/ref/general/configuration/tekton-webhooks.html#create-secrets[Create secrets].
@@ -109,7 +127,7 @@ git clone https://github.com/kabanero-io/kabanero-pipelines
 . Run the following script with the appropriate parameters
 +
 ----
-cd ./pipelines/incubator/manual-pipeline-runs/
+cd ./pipelines/sample-helper-files/
 ./manual-pipeline-run-script.sh -r [git_repo of the Appsody project] -i [docker registery path of the image to be created] -c [application stack name of which pipeline to be run]"
 ----
 
@@ -142,7 +160,7 @@ cd kabanero-pipelines
 
 . Create pipeline resources.
 +
-Use the `pipeline-resource-template.yaml` file to create the `PipelineResources`. The `pipeline-resource-template.yaml` is provided in the pipelines link:https://github.com/kabanero-io/kabanero-pipelines/tree/master/pipelines/incubator/manual-pipeline-runs[`manual-pipeline-runs` directory]. Update the docker-image URL. You can use the sample GitHub repo or update it to point to your own GitHub repo.
+Use the `pipeline-resource-template.yaml` file to create the `PipelineResources`. The `pipeline-resource-template.yaml` is provided in the pipelines link:kabanero-pipelines/pipelines/sample-helper-files/[`sample-helper-files` directory]. Update the docker-image URL. You can use the sample GitHub repo or update it to point to your own GitHub repo.
 
 . After you update the file, apply it as shown in the following example:
 +
@@ -159,9 +177,9 @@ oc apply -f <task.yaml>
 oc apply -f <pipeline.yaml>
 ----
 
-=== Run the pipeline
+=== Running the pipeline
 
-A sample `manual-pipeline-run-template.yaml` file is provided in the link:https://github.com/kabanero-io/kabanero-pipelines/tree/master/pipelines/incubator/manual-pipeline-runs[`/pipelines/manual-pipeline-runs` directory]. Rename the template file to `pipeline-run.yaml`, for example, and update the file to replace `application-stack-name` with the name of your application stack. After you update the file, run it as shown in the following example.
+A sample `manual-pipeline-run-template.yaml` file is provided in the link:kabanero-pipelines/pipelines/sample-helper-files/[`/pipelines/sample-helper-files` directory]. Rename the template file to a name of your choice (for example, pipeline-run.yaml), and update the file to replace `application-stack-name` with the name of your application stack. After you update the file, run it as shown in the following example.
 
 ----
 oc apply -f <application-stack-name>-pipeline-run.yaml
@@ -171,9 +189,9 @@ oc apply -f <application-stack-name>-pipeline-run.yaml
 
 The following steps explain how to run pipelines against custom built application stack images instead of the provided application stacks.
 
-=== Set up a container registry URL for the custom application stack image
+=== Setting up a container registry URL for the custom application stack image
 
-By default, pipelines pull the application stack images for Docker hub. If you are publishing your application stack images to any other repository, use the following process to configure the custom repository from which your pipelines pull the container images.
+By default, pipelines pull the application stack images from Docker hub. If you are publishing your application stack images to any other registry, use the following process to configure the custom repository from which your pipelines pull the container images.
 
 . After you clone the `kabanero-pipelines` repository, find the `stack-image-registry-map.yaml` configmap template file. Add your container registry URL to this file in place of the `default-stack-image-registry-url` statement.
 +
@@ -251,7 +269,7 @@ If the pipeline run was successful, you can see a Docker image in our Docker reg
 
 == Troubleshooting
 
-To find solutions for common issues and troubleshoot problems with pipelines, see the link:https://github.com/kabanero-io/kabanero-pipelines/blob/master/Troubleshooting.md[Pipelines Troubleshooting Guide].
+To find solutions for common issues and troubleshoot problems with pipelines, see the link:https://github.com/kabanero-io/kabanero-pipelines/blob/master/docs/Troubleshooting.md[Pipelines Troubleshooting Guide].
 
 === Related links
 
