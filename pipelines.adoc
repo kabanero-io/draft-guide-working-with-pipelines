@@ -9,11 +9,35 @@ permalink: /guides/pipelines-getting-started/
 :page-guide-category: pipelines
 = Build and deploy applications with pipelines
 
-Kabanero uses link:https://github.com/tektoncd/pipeline/tree/master/docs#usage[pipelines] to illustrate a continuous input and continuous delivery (CI/CD) workflow. Each of the featured link:https://github.com/kabanero-io/collections[application stacks] contains a default pipeline that builds the application stack, publishes the image to a container registry, and then deploys the application to the Kubernetes cluster. You can also create your own tasks and pipelines and customize the pre-built pipelines and tasks.   All tasks and pipelines are activated by  link:https://github.com/kabanero-io/kabanero-operator[Kabanero's standard Kubernetes operator].
+Kabanero uses link:https://github.com/tektoncd/pipeline/tree/master/docs#usage[pipelines] to illustrate a continuous input and continuous delivery (CI/CD) workflow. Kabanero provides a set of default tasks and pipelines that can be associated with application stacks.  These pipelines validate the application stack is active, build the application stack, publishe the image to a container registry, and then deploys the application to the Kubernetes cluster. You can also create your own tasks and pipelines and customize the pre-built pipelines and tasks. All tasks and pipelines are activated by  link:https://github.com/kabanero-io/kabanero-operator[Kabanero's standard Kubernetes operator].
 
 To learn more about pipelines and creating new tasks, see link:https://github.com/tektoncd/pipeline/blob/master/docs/tutorial.md[the pipeline tutorial].
 
 == Tasks and Pipelines
+
+The default Kabanero tasks and pipelines are provided in the link:https://github.com/kabanero-io/kabanero-pipelines/tree/master/pipelines/incubator[Kabanero pipelines repository].  These can be associated with an application stack in the Kabanero custom resource definition.  An example is provided below:
+
+```
+apiVersion: kabanero.io/v1alpha1
+kind: Kabanero
+metadata:
+  name: kabanero
+spec:
+  version: "0.6.0"
+  stacks: 
+    repositories: 
+    - name: central
+      https:
+        url: https://github.com/kabanero-io/collections/releases/download/0.5.0/kabanero-index.yaml
+    pipelines:
+    - id: default
+      sha256: 14d59b7ebae113c18fb815c2ccfd8a846c5fbf91d926ae92e0017ca5caf67c95
+      https:
+        url: https://github.com/kabanero-io/kabanero-pipelines/releases/download/0.6.0/default-kabanero-pipelines.tar.gz
+```
+
+When the Kabanero operator activates the CRD, it will 
+
 
 Each application stack contains a set of default tasks and pipelines that are created when the application stack is built. The application stack build process copies the task and pipeline files from link:https://github.com/kabanero-io/collections/tree/master/incubator/common/pipelines/default[the application stack repo] to your `/pipelines` directory.
 
