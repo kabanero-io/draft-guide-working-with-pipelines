@@ -42,7 +42,7 @@ When the Kabanero operator activates the CRD, it associates the pipelines in the
 
 === Updating default tasks and pipelines
 
-The default tasks and pipelines can be updated by forking the Kabanero Pipelines repo and editing the files under `pipelines/incubator`.  The easiest way to generate the archive for use by the Kabanero CRD is to run the  link:https://github.com/kabanero-io/kabanero-pipelines/blob/master/ci/package.sh[package.sh] script or run the travis build against a release of your pipelines repo.  The script generates the archive file with the necessary pipeline artifacts and a manifest.yaml that describes the contents of the archive.
+The default tasks and pipelines can be updated by forking the Kabanero Pipelines repo and editing the files under `pipelines/incubator`.  The easiest way to generate the archive for use by the Kabanero CRD is to run the link:https://github.com/kabanero-io/kabanero-pipelines/blob/master/ci/package.sh[package.sh] script. The script generates the archive file with the necessary pipeline artifacts and a `manifest.yaml` file that describes the contents of the archive. Alternatively, you can run the Travis build against a release of your pipelines repo, which also generates an archive file and a `manifest.yaml` file.
 
 == Creating new tasks and pipelines
 
@@ -51,7 +51,7 @@ The default tasks and pipelines can be updated by forking the Kabanero Pipelines
 
 - link:https://github.com/kabanero-io/kabanero-pipelines/blob/master/pipelines/incubator/build-deploy-pl.yaml[build-deploy-pl.yaml]
 
-This file is the primary pipeline that showcases all the tasks supplied in the Kabanero repo. It validates that the application stack is active, builds the application stack, publishes the application image to the container registry, does a security scan of the image, and conditionally deploys the application. When running the pipeline via a webhook, the pipeline  leverages the tekton triggers functionality to conditionally deploy the application only when a pull request is merged in the git repo.  Other actions that trigger the pipeline run, will validate, build, push, and scan the image.
+This file is the primary pipeline that showcases all the tasks supplied in the Kabanero repo. It validates that the application stack is active, builds the application stack, publishes the application image to the container registry, does a security scan of the image, and conditionally deploys the application. When running the pipeline via a webhook, the pipeline leverages the triggers functionality to conditionally deploy the application only when a pull request is merged in the git repo.  Other actions that trigger the pipeline run, will validate, build, push, and scan the image.
 
 === Tasks
 
@@ -101,7 +101,6 @@ Git secrets must be created in the `+kabanero+` namespace and associated with th
 link:https://kabanero.io/docs/ref/general/configuration/tekton-webhooks.html#create-secrets[Create secrets].
 
 Alternatively, you can link:https://docs.okd.io/latest/dev_guide/secrets.html#creating-secrets[configure secrets in the Kubernetes console or set them up by using the Kubernetes CLI].
-
 
 
 === Running pipelines by using the pipelines dashboard webhook extension
