@@ -1,5 +1,5 @@
 ---
-permalink: /guides/pipelines-getting-started/
+permalink: /guides/working-with-pipelines/
 layout: guide-markdown
 title: Build and deploy applications with pipelines
 duration: 30 minutes
@@ -115,23 +115,25 @@ Explore how to use pipelines to build and manage application stacks.
 
 ### Getting started
 
-#### Setting up a persistent volume to run pipelines
+Follow these steps:
 
-Pipelines require a configured volume that is used by the framework to share data across tasks.  The pipeline run creates a Persistent Volume Claim (PVC) with a requirement for five GB of persistent volume.
+1. Set up a persistent volume to run pipelines
 
-##### Static persistent volumes
+   Pipelines require a configured volume that is used by the framework to share data across tasks.  The pipeline run creates a Persistent Volume Claim (PVC) with a requirement for five GB of persistent volume.
 
-If you are not running your cluster on a public cloud, you can set up a static persistent volume using NFS. For an example of how to use static persistent volume provisioning, see [Static persistent volumes](https://github.com/kabanero-io/kabanero-pipelines/blob/master/docs/VolumeProvisioning.md#static-persistent-volumes).
+   - Static persistent volumes
 
-##### Dynamic volume provisioning
+      If you are not running your cluster on a public cloud, you can set up a static persistent volume using NFS. For an example of how to use static persistent volume provisioning, see [Static persistent volumes](https://github.com/kabanero-io/kabanero-pipelines/blob/master/docs/VolumeProvisioning.md#static-persistent-volumes).
 
-If you run your cluster on a public cloud, you can set up a dynamic persistent volume by using your cloud provider’s default storage class. For an example of how to use dynamic persistent volume provisioning, see [Dynamic volume provisioning](https://github.com/kabanero-io/kabanero-pipelines/blob/master/docs/VolumeProvisioning.md#dynamic-volume-provisioning).
+   - Dynamic volume provisioning
 
-#### Creating secrets
+      If you run your cluster on a public cloud, you can set up a dynamic persistent volume by using your cloud provider’s default storage class. For an example of how to use dynamic persistent volume provisioning, see [Dynamic volume provisioning](https://github.com/kabanero-io/kabanero-pipelines/blob/master/docs/VolumeProvisioning.md#dynamic-volume-provisioning).
 
-Git secrets must be created in the `kabanero` namespace and associated with the service account that runs the pipelines. To configure secrets using the pipelines dashboard, see [Create secrets](https://kabanero.io/docs/ref/general/configuration/tekton-webhooks.html#create-secrets).
+1. Create secrets
 
-Alternatively, you can [configure secrets in the Kubernetes console or set them up by using the Kubernetes CLI](https://docs.okd.io/latest/dev_guide/secrets.html#creating-secrets).
+   Git secrets must be created in the `kabanero` namespace and associated with the service account that runs the pipelines. To configure secrets using the pipelines dashboard, see [Create secrets](https://kabanero.io/docs/ref/general/configuration/tekton-webhooks.html#create-secrets).
+
+   Alternatively, you can [configure secrets in the Kubernetes console or set them up by using the Kubernetes CLI](https://docs.okd.io/latest/dev_guide/secrets.html#creating-secrets).
 
 ### Running pipelines by using the pipelines dashboard webhook extension
 
@@ -172,6 +174,8 @@ If you are developing a new pipeline and want to test it in a tight loop, you mi
       ```
 
 ### Running pipelines manually from the command line
+
+Follow these steps to run a pipeline directly from the command line:
 
 1. Login to your cluster. For example,
 
