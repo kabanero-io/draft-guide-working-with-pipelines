@@ -238,46 +238,34 @@ By default, pipelines pull the application stack images from Docker hub. If you 
    vi stack-image-registry-map.yaml
    ```
 
+1. If your custom application stack image is stored in an internal OpenShift registry, the service account that is associated with the pipelines must be configured to allow the pipelines to pull from the internal registry without configuring a secret. If your custom application stack is stored in a container registry with an external route, follow these steps to set up a Kubernetes secret:
+
+   - Find the `default-stack-image-registry-secret.yaml` template file in the cloned kabanero-pipelines repo (`kabanero-pipelines/pipelines/common`) and update it with the username and token password for the container registry URL you specified previously.
+
+   - Create a Base64 format version of the username and password for the external route container registry URL.
+
+      ```shell
+      echo -n <your-registry-username> | base64
+      echo -n <your-registry-password> | base64
+      ```
+
+   - Update the `default-stack-image-registry-secret.yaml` file with the Base64 formatted username and password.
+
+      ```shell
+      vi default-stack-image-registry-secret.yaml
+      ```
+
+   - Apply the `default-stack-image-registry-secret.yaml` file to the cluster
+
+      ```shell
+      oc apply -f default-stack-image-registry-secret.yaml
+      ```
+
 1. Apply the following configmap file, which will set your container registry.
 
    ```shell
    oc apply -f stack-image-registry-map.yaml
    ```
-
-#### Setting up a container registry URL for a custom application stack image that is stored in a container registry with an internal route URL on the cluster
-
-For an internal OpenShift registry, set up the `stack-image-registry-map.yaml` file with the internal registry URL.
-
-NOTE : In this case, the service account that is associated with the pipelines must be configured to allow the pipelines pull from the internal registry without configuring a secret.
-
-#### Setting up a container registry URL for a custom application stack image that is stored in a container registry with an external route URL
-
-For a container image with an external container registry route URL, you must set up a Kubernetes secret. To set up this secret, update the `default-stack-image-registry-secret.yaml` template file with a Base64 formatted username and password and apply it to the cluster, as described in the following steps.
-
-1. First, update the `stack-image-registry-map.yaml` file with your container registry file, as described in step 1 of `Set up a container registry URL for the custom application stack image`.
-
-1. Find the `default-stack-image-registry-secret.yaml` template file in the cloned kabanero-pipelines repo (`kabanero-pipelines/pipelines/common`) and update it with the username and token password for the container registry URL you specified previously.
-
-1. Create a Base64 format version of the username and password for the external route container registry URL.
-
-   ```shell
-   echo -n <your-registry-username> | base64
-   echo -n <your-registry-password> | base64
-   ```
-
-1. Update the `default-stack-image-registry-secret.yaml` file with the Base64 formatted username and password.
-
-   ```shell
-   vi default-stack-image-registry-secret.yaml
-   ```
-
-1. Apply the `default-stack-image-registry-secret.yaml` file to the cluster
-
-   ```shell
-   oc apply -f default-stack-image-registry-secret.yaml
-   ```
-
-1. You can now run the pipeline by following the steps in the preceding `Run pipelines from the command line for your custom built application stacks` section.
 
 <!--
 // =================================================================================================
