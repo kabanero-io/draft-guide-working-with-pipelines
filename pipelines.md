@@ -231,13 +231,13 @@ in the `appsody init` command. Alternatively use the following process to config
 1. After you clone the `kabanero-pipelines` repository, find the `stack-image-registry-map.yaml` configmap template file. Add your container registry URL to this file in place of the `default-stack-image-registry-url` statement.
 
    ```shell
-   cd kabanero-pipelines/pipelines/common/
+   cd kabanero-pipelines/pipelines/sample-helper-files/
    vi stack-image-registry-map.yaml
    ```
 
 1. If your custom application stack image is stored in an internal OpenShift registry, the service account that is associated with the pipelines must be configured to allow the pipelines to pull from the internal registry without configuring a secret. If your custom application stack is stored in a container registry with an external route, follow these steps to set up a Kubernetes secret:
 
-   - Find the `default-stack-image-registry-secret.yaml` template file in the cloned kabanero-pipelines repo (`kabanero-pipelines/pipelines/common`) and update it with the username and token password for the container registry URL you specified previously.
+   - Find the `default-stack-image-registry-secret.yaml` template file in the cloned kabanero-pipelines repo (`kabanero-pipelines/pipelines/sample-helper-files/`) and update it with the username and token password for the container registry URL you specified previously.
 
    - Create a Base64 format version of the username and password for the external route container registry URL.
 
