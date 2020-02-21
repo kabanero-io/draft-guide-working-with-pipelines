@@ -219,14 +219,15 @@ oc apply -f <application-stack-name>-pipeline-run.yaml
 
 <!--
 // =================================================================================================
-// Running pipelines from the command line for your custom built application stacks
+// Using stacks that are published to internal and private registries by pipelines
 // =================================================================================================
 -->
 
-## Running pipelines from the command line for your custom built application stacks
+## Using stacks that are published to internal and private registries by pipelines
 
-If you are publishing your application stack images to any other registry you can specify your custom registry when you initialize a stack by using the `--stack-registry` option
-in the `appsody init` command. Alternatively use the following process to configure the custom repository from which your pipelines pull the container images.
+If you are publishing your application stack images to any registry other than Docker hub, you can specify your custom registry when you initialize a stack by using the `--stack-registry` option in the `appsody init` command.  Specifying a custom registry updates the stack name in the `.appsody-config.yaml` to include the registry information that is consumed by the pipeline.  
+
+Alternatively, you can use a configmap to configure the custom repository from which your pipelines pulls the container images.
 
 1. After you clone the `kabanero-pipelines` repository, find the `stack-image-registry-map.yaml` configmap template file. Add your container registry URL to this file in place of the `default-stack-image-registry-url` statement.
 
