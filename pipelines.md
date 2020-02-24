@@ -38,42 +38,8 @@ To learn more about pipelines and creating new tasks, see [the pipeline tutorial
 
 ## Default tasks and pipelines
 
-The default Kabanero tasks and pipelines are provided in the [Kabanero pipelines repository](https://github.com/kabanero-io/kabanero-pipelines/tree/master/pipelines/incubator).  These can be associated with an application stack in the Kabanero custom resource definition (CRD). This is an example CRD:
+The default Kabanero tasks and pipelines are provided in the [Kabanero pipelines repository](https://github.com/kabanero-io/kabanero-pipelines/tree/master/pipelines/incubator).  Details of some of the primary pipelines and tasks are described below.
 
-```yaml
-apiVersion: kabanero.io/v1alpha1
-kind: Kabanero
-metadata:
-  name: kabanero
-spec:
-  version: "0.6.0"
-  stacks:
-    repositories:
-    - name: central
-      https:
-        url: https://github.com/kabanero-io/collections/releases/download/0.5.0/kabanero-index.yaml
-    pipelines:
-    - id: default
-      sha256: 14d59b7ebae113c18fb815c2ccfd8a846c5fbf91d926ae92e0017ca5caf67c95
-      https:
-        url: https://github.com/kabanero-io/kabanero-pipelines/releases/download/0.6.0/default-kabanero-pipelines.tar.gz
-```
-
-When the Kabanero operator activates the CRD, it associates the pipelines in the pipelines archive with each of the stacks in the stack hub.  The default pipelines are intended to work with all the stacks in the stack hub in the previous example. All of the pipeline-related resources (such as the tasks, trigger bindings, and pipelines) prefix the name of the resource with the keyword `StackId`.  When the operator activates these resources, it replaces the keyword with the name of the stack it is activating.
-
-### Updating default tasks and pipelines
-
-The default tasks and pipelines can be updated by forking the Kabanero Pipelines repo and editing the files under `pipelines/incubator`.  The easiest way to generate the archive for use by the Kabanero CRD is to run the [package.sh](https://github.com/kabanero-io/kabanero-pipelines/blob/master/ci/package.sh) script. The script generates the archive file with the necessary pipeline artifacts and a `manifest.yaml` file that describes the contents of the archive.  Copy the `package.sh` file to the root directory of your pipelines project and run it.  It generates the pipelines archive file under `ci/assests`.
-
-Alternatively, you can run the Travis build against a release of your pipelines repo, which also generates the archive file with a `manifest.yaml` file and attaches it to your release.
-
-<!--
-// =================================================================================================
-// Creating new tasks and pipelines
-// =================================================================================================
--->
-
-## Creating new tasks and pipelines
 
 ### The build, push and deploy pipeline
 
@@ -100,6 +66,37 @@ This task validates the stack is allowed to build and deploy on the cluster.  It
   The `image-scan-task` task will initiate a container scan of the image published by the `build-push-task` using OpenSCAP.  The results of the scan are published in the logs of the task.
   
 For more tasks and pipelines, see [the kabanero-pipelines repo](https://github.com/kabanero-io/kabanero-pipelines).
+
+### Associated pipelines with applications stacks in Kabanero CRD
+
+The pipelines can be associated with an application stack in the Kabanero custom resource definition (CRD). This is an example CRD:
+
+```yaml
+apiVersion: kabanero.io/v1alpha1
+kind: Kabanero
+metadata:
+  name: kabanero
+spec:
+  version: "0.6.0"
+  stacks:
+    repositories:
+    - name: central
+      https:
+        url: https://github.com/kabanero-io/collections/releases/download/0.5.0/kabanero-index.yaml
+    pipelines:
+    - id: default
+      sha256: 14d59b7ebae113c18fb815c2ccfd8a846c5fbf91d926ae92e0017ca5caf67c95
+      https:
+        url: https://github.com/kabanero-io/kabanero-pipelines/releases/download/0.6.0/default-kabanero-pipelines.tar.gz
+```
+
+When the Kabanero operator activates the CRD, it associates the pipelines in the pipelines archive with each of the stacks in the stack hub.  The default pipelines are intended to work with all the stacks in the stack hub in the previous example. All of the pipeline-related resources (such as the tasks, trigger bindings, and pipelines) prefix the name of the resource with the keyword `StackId`.  When the operator activates these resources, it replaces the keyword with the name of the stack it is activating.
+
+### Creating and updating tasks and pipelines
+
+The default tasks and pipelines can be updated by forking the Kabanero Pipelines repo and editing the files under `pipelines/incubator`.  The easiest way to generate the archive for use by the Kabanero CRD is to run the [package.sh](https://github.com/kabanero-io/kabanero-pipelines/blob/master/ci/package.sh) script. The script generates the archive file with the necessary pipeline artifacts and a `manifest.yaml` file that describes the contents of the archive.  Copy the `package.sh` file to the root directory of your pipelines project and run it.  It generates the pipelines archive file under `ci/assests`.
+
+Alternatively, you can run the Travis build against a release of your pipelines repo, which also generates the archive file with a `manifest.yaml` file and attaches it to your release.
 
 <!--
 // =================================================================================================
