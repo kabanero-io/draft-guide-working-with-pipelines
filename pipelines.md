@@ -67,7 +67,7 @@ This task validates the stack is allowed to build and deploy on the cluster.  It
   
 For more tasks and pipelines, see [the kabanero-pipelines repo](https://github.com/kabanero-io/kabanero-pipelines).
 
-### Associated pipelines with applications stacks in Kabanero CRD
+### Associating pipelines with applications stacks in Kabanero CRD
 
 The pipelines can be associated with an application stack in the Kabanero custom resource definition (CRD). This is an example CRD:
 
