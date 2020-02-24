@@ -63,7 +63,9 @@ When the Kabanero operator activates the CRD, it associates the pipelines in the
 
 ### Updating default tasks and pipelines
 
-The default tasks and pipelines can be updated by forking the Kabanero Pipelines repo and editing the files under `pipelines/incubator`.  The easiest way to generate the archive for use by the Kabanero CRD is to run the [package.sh](https://github.com/kabanero-io/kabanero-pipelines/blob/master/ci/package.sh) script. The script generates the archive file with the necessary pipeline artifacts and a `manifest.yaml` file that describes the contents of the archive. Alternatively, you can run the Travis build against a release of your pipelines repo, which also generates an archive file and a `manifest.yaml` file.
+The default tasks and pipelines can be updated by forking the Kabanero Pipelines repo and editing the files under `pipelines/incubator`.  The easiest way to generate the archive for use by the Kabanero CRD is to run the [package.sh](https://github.com/kabanero-io/kabanero-pipelines/blob/master/ci/package.sh) script. The script generates the archive file with the necessary pipeline artifacts and a `manifest.yaml` file that describes the contents of the archive.  Copy the package.sh file to the root directory of your pipelines project and run it.  It will generate the pipelines archive file under `ci/assests`.
+
+Alternatively, you can run the Travis build against a release of your pipelines repo, which also generates an archive file with a `manifest.yaml` file and will attach it to your release.
 
 <!--
 // =================================================================================================
@@ -81,17 +83,73 @@ The default tasks and pipelines can be updated by forking the Kabanero Pipelines
 
 ### Tasks
 
-- [build-task.yaml](https://github.com/kabanero-io/kabanero-pipelines/blob/master/pipelines/incubator/build-task.yaml)
+- [validate-active-stack-task.yaml](https://github.com/kabanero-io/kabanero-pipelines/blob/master/pipelines/incubator/validate-active-stack-task.yaml)
 
-   This file builds a container image from the artifacts in the git-source repository by using [Buildah](https://github.com/containers/buildah). After the image is built, the `build-task` file publishes it to the docker-image URL by using Buildah.
+This task will validate the stack is allowed to build an deploy on the cluster.  It checks the digest of the stack image specified in the `.appsody-config.yaml` of the project and validates it matches the digest of the stack image that's active on the collection.  If they do not match, the pipeline will fail and none of the other steps will execute.
+
+- [build-push-task.yaml](https://github.com/kabanero-io/kabanero-pipelines/blob/master/pipelines/incubator/build-push-task.yaml)
+
+   This file builds a container image from the artifacts in the git-source repository by using `appsody build`.  The appsody build command will leverage the [Buildah](https://github.com/containers/buildah) options. After the image is built, the image will get published to the container registry that is configured. The build-push-task will also generate the `app-deploy.yaml` that is used by the `deploy-task`.  If there is already a copy of the `app-deploy.yaml` file in the source repository, it will get merged with the new one genrated by this step.
 
 - [deploy-task.yaml](https://github.com/kabanero-io/kabanero-pipelines/blob/master/pipelines/incubator/deploy-task.yaml)
 
-   This file modifies the `app-deploy.yaml` file, which describes the deployment options for the application. `Deploy-task` modifies `app-deploy.yaml` to point to the image that was published and deploys the application by using the application deployment operator. Generate your `app-deploy.yaml` file by running the `appsody deploy --generate-only` command.
+   `Deploy-task` uses `app-deploy.yaml` to deploy the application to the cluster by using the application deployment operator. By default, the pipelines run and deploy the application in the `kabanero` namespace. If you want to deploy the application in a different namespace, update the `app-deploy.yaml` file to point to that namespace.
 
-By default, the pipelines run and deploy the application in the `kabanero` namespace. If you want to deploy the application in a different namespace, update the `app-deploy.yaml` file to point to that namespace.
+- [image-scan-task.yaml](https://github.com/kabanero-io/kabanero-pipelines/blob/master/pipelines/incubator/image-scan-task.yaml)
 
-For more information, see [the kabanero-pipelines repo](https://github.com/kabanero-io/kabanero-pipelines).
+  The `image-scan-task` will initiate a container scan of the image published by the `build-push-task` using OpenSCAP.  The results of the scan get published in the logs of the task.
+  
+For more tasks and pipelines, see [the kabanero-pipelines repo](https://github.com/kabanero-io/kabanero-pipelines).
+
+<!--
+// =================================================================================================
+// Using stacks that are published to internal and private registries by pipelines
+// =================================================================================================
+-->
+
+## Using stacks that are published to internal and private registries in pipelines
+
+If you are publishing your application stack images to any registry other than Docker hub, you can specify your custom registry when you initialize a stack by using the `--stack-registry` option in the `appsody init` command.  Specifying a custom registry updates the stack name in the `.appsody-config.yaml` to include the registry information that is consumed by the pipeline.  
+
+Alternatively, you can use a configmap to configure the custom repository from which your pipelines pulls the container images.
+
+1. After you clone the `kabanero-pipelines` repository, find the `stack-image-registry-map.yaml` configmap template file. Add your container registry URL to this file in place of the `default-stack-image-registry-url` statement.
+
+   ```shell
+   cd kabanero-pipelines/pipelines/sample-helper-files/
+   vi stack-image-registry-map.yaml
+   ```
+
+1. If your custom application stack image is stored in an internal OpenShift registry, the service account that is associated with the pipelines must be configured to allow the pipelines to pull from the internal registry without configuring a secret. If your custom application stack is stored in a container registry with an external route, follow these steps to set up a Kubernetes secret:
+
+   - Find the `default-stack-image-registry-secret.yaml` template file in the cloned kabanero-pipelines repo (`kabanero-pipelines/pipelines/sample-helper-files/`) and update it with the username and token password for the container registry URL you specified previously.
+
+   - Create a Base64 format version of the username and password for the external route container registry URL.
+
+      ```shell
+      echo -n <your-registry-username> | base64
+      echo -n <your-registry-password> | base64
+      ```
+
+   - Update the `default-stack-image-registry-secret.yaml` file with the Base64 formatted username and password.
+
+      ```shell
+      vi default-stack-image-registry-secret.yaml
+      ```
+
+   - Apply the `default-stack-image-registry-secret.yaml` file to the cluster
+
+      ```shell
+      oc apply -f default-stack-image-registry-secret.yaml
+      ```
+
+1. Apply the following configmap file, which will set your container registry.
+
+   ```shell
+   oc apply -f stack-image-registry-map.yaml
+   ```
+
+**NOTE:** If a value is specified in both the config map and in the `.appsody-config.yaml` and they are different, the config map takes precedence.
 
 <!--
 // =================================================================================================
@@ -216,56 +274,6 @@ A sample `manual-pipeline-run-template.yaml` file is provided in the [/pipelines
 ```shell
 oc apply -f <application-stack-name>-pipeline-run.yaml
 ```
-
-<!--
-// =================================================================================================
-// Using stacks that are published to internal and private registries by pipelines
-// =================================================================================================
--->
-
-## Using stacks that are published to internal and private registries by pipelines
-
-If you are publishing your application stack images to any registry other than Docker hub, you can specify your custom registry when you initialize a stack by using the `--stack-registry` option in the `appsody init` command.  Specifying a custom registry updates the stack name in the `.appsody-config.yaml` to include the registry information that is consumed by the pipeline.  
-
-Alternatively, you can use a configmap to configure the custom repository from which your pipelines pulls the container images.
-
-1. After you clone the `kabanero-pipelines` repository, find the `stack-image-registry-map.yaml` configmap template file. Add your container registry URL to this file in place of the `default-stack-image-registry-url` statement.
-
-   ```shell
-   cd kabanero-pipelines/pipelines/sample-helper-files/
-   vi stack-image-registry-map.yaml
-   ```
-
-1. If your custom application stack image is stored in an internal OpenShift registry, the service account that is associated with the pipelines must be configured to allow the pipelines to pull from the internal registry without configuring a secret. If your custom application stack is stored in a container registry with an external route, follow these steps to set up a Kubernetes secret:
-
-   - Find the `default-stack-image-registry-secret.yaml` template file in the cloned kabanero-pipelines repo (`kabanero-pipelines/pipelines/sample-helper-files/`) and update it with the username and token password for the container registry URL you specified previously.
-
-   - Create a Base64 format version of the username and password for the external route container registry URL.
-
-      ```shell
-      echo -n <your-registry-username> | base64
-      echo -n <your-registry-password> | base64
-      ```
-
-   - Update the `default-stack-image-registry-secret.yaml` file with the Base64 formatted username and password.
-
-      ```shell
-      vi default-stack-image-registry-secret.yaml
-      ```
-
-   - Apply the `default-stack-image-registry-secret.yaml` file to the cluster
-
-      ```shell
-      oc apply -f default-stack-image-registry-secret.yaml
-      ```
-
-1. Apply the following configmap file, which will set your container registry.
-
-   ```shell
-   oc apply -f stack-image-registry-map.yaml
-   ```
-
-**NOTE:** If a value is specified in both the config map and in the `.appsody-config.yaml` and they are different, the config map takes precedence.
 
 <!--
 // =================================================================================================
