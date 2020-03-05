@@ -32,7 +32,7 @@ guide-category: pipelines
 //
 -->
 
-Kabanero uses [pipelines](https://github.com/tektoncd/pipeline/tree/master/docs#usage) to illustrate a continuous input and continuous delivery (CI/CD) workflow. Kabanero provides a set of default tasks and pipelines that can be associated with application stacks.  These pipelines validate the application stack is active, build the application stack, publish the image to a container registry, scan the published image, and then deploy the application to the Kubernetes cluster. You can also create your own tasks and pipelines and customize the pre-built pipelines and tasks. All tasks and pipelines are activated by  [Kabanero's standard Kubernetes operator](https://github.com/kabanero-io/kabanero-operator).
+[Pipelines](https://github.com/tektoncd/pipeline/tree/master/docs#usage) enable a continuous input and continuous delivery (CI/CD) workflow. A set of default tasks and pipelines are provided that can be associated with application stacks.  These pipelines validate the application stack is active, build the application stack, publish the image to a container registry, scan the published image, and then deploy the application to the Kubernetes cluster. You can also create your own tasks and pipelines and customize the pre-built pipelines and tasks. All tasks and pipelines are activated by the product operator.
 
 To learn more about pipelines and creating new tasks, see [the pipeline tutorial](https://github.com/tektoncd/pipeline/blob/master/docs/tutorial.md).
 
@@ -72,17 +72,18 @@ For more tasks and pipelines, see [the kabanero-pipelines repo](https://github.c
 The pipelines can be associated with an application stack in the Kabanero custom resource definition (CRD). This is an example CRD:
 
 ```yaml
-apiVersion: kabanero.io/v1alpha1
+apiVersion: kabanero.io/v1alpha2
 kind: Kabanero
 metadata:
   name: kabanero
+  namespace: kabanero
 spec:
   version: "0.6.0"
   stacks:
     repositories:
     - name: central
       https:
-        url: https://github.com/kabanero-io/collections/releases/download/0.5.0/kabanero-index.yaml
+        url: https://github.com/my-organization/stacks/releases/download/v0.1/kabanero-index.yaml
     pipelines:
     - id: default
       sha256: 14d59b7ebae113c18fb815c2ccfd8a846c5fbf91d926ae92e0017ca5caf67c95
@@ -90,7 +91,7 @@ spec:
         url: https://github.com/kabanero-io/kabanero-pipelines/releases/download/0.6.0/default-kabanero-pipelines.tar.gz
 ```
 
-When the Kabanero operator activates the CRD, it associates the pipelines in the pipelines archive with each of the stacks in the stack hub.  The default pipelines are intended to work with all the stacks in the stack hub in the previous example. All of the pipeline-related resources (such as the tasks, trigger bindings, and pipelines) prefix the name of the resource with the keyword `StackId`.  When the operator activates these resources, it replaces the keyword with the name of the stack it is activating.
+When the product operator activates the CRD, it associates the pipelines in the pipelines archive with each of the stacks in the stack hub.  The default pipelines are intended to work with all the stacks in the stack hub in the previous example. All of the pipeline-related resources (such as the tasks, trigger bindings, and pipelines) prefix the name of the resource with the keyword `StackId`.  When the operator activates these resources, it replaces the keyword with the name of the stack it is activating.
 
 ### Creating and updating tasks and pipelines
 
@@ -316,5 +317,5 @@ To find solutions for common issues and troubleshoot problems with pipelines, se
 
 ### Related links
 
-- [Kabanero Pipelines repository](https://github.com/kabanero-io/kabanero-pipelines)
-- [Tekton Pipeline tutorial](https://github.com/tektoncd/pipeline/blob/master/docs/tutorial.md)
+- [Pipelines repository](https://github.com/kabanero-io/kabanero-pipelines)
+- [Pipeline tutorial](https://github.com/tektoncd/pipeline/blob/master/docs/tutorial.md)
