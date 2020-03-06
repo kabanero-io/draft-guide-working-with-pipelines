@@ -61,6 +61,10 @@ This task validates the stack is allowed to build and deploy on the cluster.  It
 
    `Deploy-task` uses the `app-deploy.yaml` file to deploy the application to the cluster by using the application deployment operator. By default, the pipelines run and deploy the application in the `kabanero` namespace. If you want to deploy the application in a different namespace, update the `app-deploy.yaml` file to point to that namespace.
 
+- [dockerimage-name-lowercase-task.yaml](https://github.com/kabanero-io/kabanero-pipelines/blob/master/pipelines/incubator/dockerimage-name-lowercase-task.yaml)
+
+   This task is needed since build and push of a container image requires its imagename to be lowercased as per the docker requirements. This task takes `docker-imagename` and `docker-imagetag` as input params and it builds the `docker-image` resource URL path with `docker-imagename` as lowercase letters. In the case when the input param `docker-imagename` is empty or not provided it will construct the `docker-image` URL path by using the imagename from the existing `app-deploy.yaml` file. This `app-deploy.yaml` file should be present in the `git-source` project provided as an input to the pipeline.
+
 - [image-scan-task.yaml](https://github.com/kabanero-io/kabanero-pipelines/blob/master/pipelines/incubator/image-scan-task.yaml)
 
   The `image-scan-task` task will initiate a container scan of the image published by the `build-push-task` using OpenSCAP.  The results of the scan are published in the logs of the task.
